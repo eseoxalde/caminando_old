@@ -14,28 +14,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 use src\Repository\SitioPaginaRepository;
-
+use App\Repository\MenuRepository;
 use App\Repository\SitioRepository;
 
-class RegistrationController extends AbstractController
+class RegistrationController extends BaseController
 {
     private $entityManager;
-    private $elSitio;
-    private $facebook;
-    private $instagram;
-    private $twiter;
-    private $mailppal;
-    private $title;
+    private $sitio;
+    private $menues;
 
-    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository)
+    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository, MenuRepository $menuRepository)
     {
+        parent::__construct($menuRepository);
         $this->entityManager = $entityManager;
-        $this->elSitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
-        $this->title = $this->elSitio->getNombreSitio() ?: 'Caminando sobre Gliptodontes y Tigres Diente de Sable ';
-        $this->facebook = $this->elSitio->getFacebook() ?? 'https://www.facebook.com/';
-        $this->instagram = $this->elSitio->getInstagram() ?? 'https://www.instagram.com/';
-        $this->twitter = $this->elSitio->getTwiter() ?? 'https://twitter.com/';
-    }
+        $this->sitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
+        $this->menues = $menuRepository->findVisibleMenus();    }
     
     #[Route('/registrarse', name: 'registrarse')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
@@ -43,33 +36,23 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
             );
-
             $user->setRoles(['ROLE_USER']);
-
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
             return $security->login($user, UserAuthenticator::class, 'main');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->renderWithMenu('registration/register.html.twig', [
             'registrationForm' => $form,
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>'Registrarse',
+            'sitio'=>$this->sitio,
+            'menues' => $this->menues,
         ]);
     }
 }

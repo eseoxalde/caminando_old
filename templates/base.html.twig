@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="description" content="Proyecto de extensión de la UNLP" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-    <title>{{ title }}</title>
-
-
+    <title>{{ sitio.nombreSitio }}</title>
     <link rel="shortcut icon" href="{{ asset('img/index/logo.ico')}}" type="image/x-icon" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -24,70 +21,138 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tiny.cloud/1/6xiusy06jfjrkc2re5d4akmmz7tydwl37w14y19p4w0vqgpn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Scripts comunes -->
+    <script>
+        tinymce.init({
+            selector: '.tinymce',
+            menubar: false,
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright'
+        });
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#preview').attr('src', e.target.result).show();
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function toggleContentFields() {
+            const contentTypeInput = document.querySelector('input[name="pagina[contenidoTipo]"]:checked');
+            if (!contentTypeInput) {
+                return;
+            }
+
+            const contentType = contentTypeInput.value;
+            const imageFields = document.getElementById('imageFields');
+            const videoFields = document.getElementById('videoFields');
+
+            if (!imageFields || !videoFields) {
+                return;
+            }
+
+            if (contentType === 'imagen') {
+                imageFields.style.display = 'block';
+                videoFields.style.display = 'none';
+            } else if (contentType === 'video') {
+                imageFields.style.display = 'none';
+                videoFields.style.display = 'block';
+            } else {
+                imageFields.style.display = 'none';
+                videoFields.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleContentFields();
+        });
+    </script>
 </head>
 <body>
-    <header>
-        <div class="logo"><a  href="{{ path('inicio') }}"><img src="{{ asset('img/index/imagen-principal-final.jpg')}}" alt="logo de Caminando sobre gliptodontes y tigres diente de sable"></a></div>
-        <nav class="navbar navbar-expand-md container-fluid">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span><i class="fa-solid fa-bars"></i></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('inicio') }}" title="Inicio">Inicio</a>
-                    </li>
+<header>
+    <div class="logo">
+        <a href="{{ path('inicio') }}"><img src="{{ sitio.header }}" alt="logo de Caminando sobre gliptodontes y tigres diente de sable"></a>
+    </div>
+    <nav class="navbar navbar-expand-md container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span><i class="fa-solid fa-bars"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% for menu in menues %}
+                    {% if menu.parent is null %}
+                        <li class="nav-item {% if menu.children|length > 0 %}dropdown{% endif %}">
+                            <a class="nav-link {% if menu.children|length > 0 %}dropdown-toggle{% endif %}" href="{{ path('pagina_show', {'ruta': menu.ruta}) }}" {% if menu.children|length > 0 %}id="navbarDropdown{{ menu.id }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}>
+                                {{ menu.nombre }}
+                            </a>
+                            {% if menu.children|length > 0 %}
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown{{ menu.id }}">
+                                    {% for child in menu.children|sort((a, b) => a.posicion <=> b.posicion) %}
+                                        {% if child.visible %}
+                                            <a class="dropdown-item" href="{{ path('pagina_show', {'ruta': child.ruta}) }}">{{ child.nombre }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Estos items van a aparecer siempre, no pueden ni deben modificarse -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" title="Foro">Foro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('contacto') }}" title="Contacto">Contacto</a>
+                </li>
+
+                {% if app.user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Material didactico
+                        <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ app.user.username ? app.user.username : app.user.userIdentifier }}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="{{ path('documental') }}" title="Documental">Documental</a>
-                          <a class="dropdown-item" href="{{ path('libro') }}" title="Libro">Libro</a>
-                          <a class="dropdown-item" href="{{ path('fichas') }}" title="Fichas">Fichas</a>
-                          <a class="dropdown-item" href="{{ path('reconstrucciones') }}" title="Reconstrucciones">Reconstrucciones</a>
-                          <a class="dropdown-item" href="{{ path('cuentos') }}" title="Cuentos">Cuentos de Gab</a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil">Perfil</a>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}" title="Salir">Salir</a>
                         </div>
-                      </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('actividades') }}" title="Actividades">Actividades</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('foro') }}" title="Foro">Foro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('contacto') }}" title="Contacto">Contacto</a>
-                    </li>
-                    {% if app.user %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('perfil') }}" title="Perfil">Perfil</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Configuración
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <a class="dropdown-item" href="#" title="Ayuda">Ayuda</a>
+                                <a class="dropdown-item" href="{{ path('sitio_edit') }}" title="Configuración general">Configuración general</a>
+                                <a class="dropdown-item" href="{{ path('pagina_index') }}" title="Páginas">Páginas</a>
+                                <a class="dropdown-item" href="{{ path('menu_index') }}" title="Menu">Menu de navegación</a>
+                                <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios">Usuarios</a>
+                            </div>
                         </li>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('admin') }}" title="Panel de administrador">Administrador</a>
-                            </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_logout') }}" title="Salir">Salir</a>
-                        </li>
-                    {% else %}
+                    {% endif %}
+                {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('login') }}" title="Ingresar">Ingresar</a>
                     </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
-    <main>    
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>
+
+
+    <main>
         <section class="container-fluid">
-        
-            
             {% block body %}
-
             {% endblock %}
-
         </section>
     </main>
 
@@ -95,16 +160,16 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-inline">
-                    <button class="btn my-2 " type="submit">Buscar</button>
+                    <button class="btn my-2" type="submit">Buscar</button>
                     <input class="form-control" type="search" placeholder="Buscar" aria-label="Search">
                 </form>
             </div>
             <div class="col-sm-4">
                 <nav>
                     <ul>
-                        <li><a href="{{ instagram}}" title="instagram"><i class="fa-brands fa-instagram"></i></a></li>
-                        <li><a href="{{ facebook }}" title="facebook"><i class="fa-brands fa-square-facebook"></i></a></li>
-                        <li><a href="{{ twitter }}" title="X" ><i class="fa-brands fa-twitter"></i></a></li>
+                        <li><a href="{{ sitio.instagram }}" title="instagram"><i class="fa-brands fa-instagram"></i></a></li>
+                        <li><a href="{{ sitio.facebook }}" title="facebook"><i class="fa-brands fa-square-facebook"></i></a></li>
+                        <li><a href="{{ sitio.twitter }}" title="X"><i class="fa-brands fa-twitter"></i></a></li>
                     </ul>
                 </nav>
             </div>

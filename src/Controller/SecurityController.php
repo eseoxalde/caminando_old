@@ -8,29 +8,22 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use src\Repository\SitioPaginaRepository;
-
+use App\Repository\MenuRepository;
 use App\Repository\SitioRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SecurityController extends AbstractController
+class SecurityController extends BaseController
 {
     private $entityManager;
-    private $elSitio;
-    private $facebook;
-    private $instagram;
-    private $twiter;
-    private $mailppal;
-    private $title;
+    private $sitio;
+    private $menues;
 
-    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository)
+    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository, MenuRepository $menuRepository)
     {
+        parent::__construct($menuRepository);
         $this->entityManager = $entityManager;
-        $this->elSitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
-        $this->title = $this->elSitio->getNombreSitio() ?: 'Caminando sobre Gliptodontes y Tigres Diente de Sable ';
-        $this->facebook = $this->elSitio->getFacebook() ?? 'https://www.facebook.com/';
-        $this->instagram = $this->elSitio->getInstagram() ?? 'https://www.instagram.com/';
-        $this->twitter = $this->elSitio->getTwiter() ?? 'https://twitter.com/';
-    }
+        $this->sitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
+        $this->menues = $menuRepository->findVisibleMenus();    }
 
     #[Route(path: '/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -41,17 +34,13 @@ class SecurityController extends AbstractController
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig',
+        return $this->renderWithMenu('security/login.html.twig',
          [
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>'Ingresar',
-         'last_username' => $lastUsername, 'error' => $error]);
+            'sitio'=> $this->sitio,
+            'menues' => $this->menues,
+            'last_username' => $lastUsername, 'error' => $error]);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

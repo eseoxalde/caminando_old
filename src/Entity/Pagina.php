@@ -14,6 +14,9 @@ class Pagina
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: "paginas")]
+    private ?Menu $menu = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $titulo = null;
 
@@ -26,17 +29,19 @@ class Pagina
     #[ORM\Column(length: 100)]
     private ?string $ruta = null;
 
-    #[ORM\Column]
-    private ?bool $imagen_tipo1 = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $contenidoTipo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $ruta_imagen_tipo1 = null;
+    private ?string $ruta_imagen_unica = null;
 
-    #[ORM\Column]
-    private ?bool $video = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $texto_alt_imagen_unica = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $ruta_video = null;
+
+    
 
     public function getId(): ?int
     {
@@ -98,38 +103,38 @@ class Pagina
         return $this;
     }
 
-    public function isImagenTipo1(): ?bool
+    public function getContenidoTipo(): ?string
     {
-        return $this->imagen_tipo1;
+        return $this->contenidoTipo;
     }
 
-    public function setImagenTipo1(bool $imagen_tipo1): static
+    public function setContenidoTipo(?string $contenidoTipo): static
     {
-        $this->imagen_tipo1 = $imagen_tipo1;
+        $this->contenidoTipo = $contenidoTipo;
 
         return $this;
     }
 
-    public function getRutaImagenTipo1(): ?string
+    public function getRutaImagenUnica(): ?string
     {
-        return $this->ruta_imagen_tipo1;
+        return $this->ruta_imagen_unica;
     }
 
-    public function setRutaImagenTipo1(?string $ruta_imagen_tipo1): static
+    public function setRutaImagenUnica(?string $ruta_imagen_unica): static
     {
-        $this->ruta_imagen_tipo1 = $ruta_imagen_tipo1;
+        $this->ruta_imagen_unica = $ruta_imagen_unica;
 
         return $this;
     }
 
-    public function isVideo(): ?bool
+    public function getTextoAltImagenUnica(): ?string
     {
-        return $this->video;
+        return $this->texto_alt_imagen_unica;
     }
 
-    public function setVideo(?bool $video): static
+    public function setTextoAltImagenUnica(?string $texto_alt_imagen_unica): static
     {
-        $this->video = $video;
+        $this->texto_alt_imagen_unica = $texto_alt_imagen_unica;
 
         return $this;
     }
@@ -146,6 +151,15 @@ class Pagina
         return $this;
     }
 
+    public function getMenu(): ?Menu
+    {
+        return $this->menu;
+    }
 
+    public function setMenu(?Menu $menu): static
+    {
+        $this->menu = $menu;
 
+        return $this;
+}
 }

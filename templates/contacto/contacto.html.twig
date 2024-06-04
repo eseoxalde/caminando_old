@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="row">
+    <div class="col-md-6">
+        <h1>Contacto</h1>
+        <div class="separador"> </div>
+            {% for message in app.session.flashBag.get('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            {{ form_start(contact_form, {'attr': {'class': 'form'}}) }}
+            {{ form_row(contact_form.nombre, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(contact_form.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(contact_form.asunto, {'attr': {'class': 'form-control'}}) }}
+            {{ form_row(contact_form.mensaje, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+            
+            <button class="btn btn-lg btn-primary" type="submit">Enviar</button>
+
+            {{ form_end(contact_form) }}       
+        </div>
+        <div class="col-md-6">
+           
+
+        </div>
+        
+</article>
+
+{% endblock %}

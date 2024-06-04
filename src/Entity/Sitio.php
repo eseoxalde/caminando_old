@@ -14,11 +14,9 @@ class Sitio
     #[ORM\Column]
     private ?int $id = null;
 
+    #El header es una imagen
     #[ORM\Column(type: Types::TEXT)]
     private ?string $header = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $menu = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nombreSitio = null;
@@ -29,11 +27,11 @@ class Sitio
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $instagram = null;
 
-    #[ORM\Column(length: 255, nullable: true, options: ["default" => "'https://www.facebook.com/'"])]
-    private ?string $facebook = 'https://www.facebook.com/';
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebook = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $twiter = null;
+    private ?string $twitter = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
@@ -58,18 +56,6 @@ class Sitio
     public function setHeader(string $header): static
     {
         $this->header = $header;
-
-        return $this;
-    }
-
-    public function getMenu(): ?string
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(string $menu): static
-    {
-        $this->menu = $menu;
 
         return $this;
     }
@@ -134,14 +120,14 @@ class Sitio
         return $this;
     }
 
-    public function getTwiter(): ?string
+    public function getTwitter(): ?string
     {
-        return $this->twiter;
+        return $this->twitter;
     }
 
-    public function setTwiter(?string $twiter): static
+    public function setTwitter(?string $twitter): static
     {
-        $this->twiter = $twiter;
+        $this->twitter = $twitter;
 
         return $this;
     }

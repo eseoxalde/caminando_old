@@ -1,18 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+        {% if app.user %}
+            <h1>Bienvenido 
+            {% if app.user.getUsername() %}
+                {{ app.user.getUsername() }}
+            {% else %} 
+                {{ app.user.userIdentifier }}
+            {% endif %}
+            </h1>
+             <div class="separador"> </div>
 <div class="container mt-4">
     <div class="row justify-content-center" style="height: 80vh;">
-        <div class="col-md-4 text-center">
-            {% if app.user %}
-                <h2>Bienvenido 
-                    {% if app.user.getUsername() %}
-                        {{ app.user.getUsername() }}
-                    {% else %} 
-                        {{ app.user.userIdentifier }}
-                    {% endif %}
-                </h2>
 
+           
+            <div class="col-md-4 text-center">
                 {% if app.user.getFoto() %}
                     <img src="{{ asset(app.user.getFoto()) }}" alt="Foto de perfil" class="img-fluid rounded-circle" width="150" height="150">
                 {% else %}
@@ -20,12 +22,13 @@
                 {% endif %}
 
                 <div class="mt-3">
-                    <a href="{{ path('editarPerfil') }}" class="btn btn-primary">Editar perfil</a>
+                    <a href="{{ path('profile_edit') }}" class="btn btn-primary d-block">Editar perfil</a>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('admin') }}" class="btn btn-secondary">Pantalla de administrador</a>
+                        <a href="{{ path('sitio_edit') }}" class="btn btn-primary d-block mt-2">Configuración del sitio</a>
+                        <a href="{{ path('sitio_edit') }}" class="btn btn-primary d-block mt-2">Ayuda</a>
                     {% endif %}
                 </div>
-            {% endif %}
+           
         </div>
 
         <div class="col-md-6 text-left">
@@ -48,6 +51,7 @@
                 <strong>Recibir notificaciones:</strong> {{ app.user.isNotificaciones() ? 'Sí' : 'No' }}
             </div>
         </div>
+     {% endif %}
     </div>
 </div>
 {% endblock %}

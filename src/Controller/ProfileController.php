@@ -5,56 +5,40 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 use App\Form\UserProfileType;
-
 use App\Entity\Pagina;
 use App\Repository\SitioRepository;
 use App\Repository\PaginaRepository;
+use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ProfileController extends AbstractController
+class ProfileController extends BaseController
 {
     private $entityManager;
-    private $elSitio;
-    private $facebook;
-    private $instagram;
-    private $twiter;
-    private $mailppal;
-    private $title;
+    private $sitio;
+    private $menues;
 
-    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository)
+    #[Route('/perdil')]
+    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository, MenuRepository $menuRepository)
     {
+        parent::__construct($menuRepository);
         $this->entityManager = $entityManager;
-        $this->elSitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
-        $this->title = $this->elSitio->getNombreSitio() ?: 'Caminando sobre Gliptodontes y Tigres Diente de Sable ';
-        $this->facebook = $this->elSitio->getFacebook() ?? 'https://www.facebook.com/';
-        $this->instagram = $this->elSitio->getInstagram() ?? 'https://www.instagram.com/';
-        $this->twitter = $this->elSitio->getTwiter() ?? 'https://twitter.com/';
-    }
+        $this->sitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
+        $this->menues = $menuRepository->findVisibleMenus();    }
 
-    #[Route('/perfil', name: 'perfil')]
+    #[Route('/', name: 'perfil')]
     public function perfil(PaginaRepository $paginaRepository): Response
     {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'perfil']);
-
-        return $this->render('perfil/perfil.html.twig', [
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
+        return $this->renderWithMenu('perfil/index.html.twig', [
+            'sitio'=> $this->sitio,
+            'menues' => $this->menues,
         ]);
     }
     
-    #[Route('/perfil/editar', name: 'editarPerfil')]
+    #[Route('/edit', name: 'profile_edit')]
     public function edit(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -63,15 +47,11 @@ class ProfileController extends AbstractController
     ): Response {
         $user = $this->getUser();
         $form = $this->createForm(UserProfileType::class, $user);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $fotoFile = $form['foto']->getData();
-
             if ($fotoFile) {
                 $newFilename = uniqid() . '.' . $fotoFile->guessExtension();
-
                 try {
                     $fotoFile->move(
                         $this->getParameter('app.user_profile_pictures_directory'),
@@ -82,22 +62,16 @@ class ProfileController extends AbstractController
                 }
                 $user->setFoto('/uploads/profile_pictures/' . $newFilename);
             }
-
             $entityManager->persist($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'Perfil actualizado con éxito.');
-
-            return $this->redirectToRoute('perfil'); // Regresar a la página de perfil
+            return $this->redirectToRoute('perfil');
         }
 
-        return $this->render('perfil/perfil_editar.html.twig', [
+        return $this->renderWithMenu('perfil/edit.html.twig', [
             'form' => $form->createView(),
-            'title' => $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter' => $this->twiter,
-            'titulo' => 'Editar perfil',
+            'sitio' => $this->sitio,
+            'menues' => $this->menues,
         ]);
     }
 }

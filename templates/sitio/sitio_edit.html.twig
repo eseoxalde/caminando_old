@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="row">
+    <div class="col-md-6">
+        <h1>Configuración general del sitio</h1>
+        <div class="separador"> </div>
+        {{ form_start(form) }}
+            {% if sitio.header %}
+                <img class="img-logo-contacto" src="{{ sitio.header }}" alt="">
+            {% endif %}
+            <div class="mb-2"> 
+                {{ form_label(form.header, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.header, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
+                <img id="preview" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
+            </div>
+            {% if sitio.logoSitio %}
+                <img class="img-logo-contacto" src="{{ sitio.logoSitio }}" alt="">
+            {% endif %}
+            <div class="mb-2"> 
+                {{ form_label(form.logo_sitio, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.logo_sitio, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
+                <img id="preview" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.nombre_sitio, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nombre_sitio, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.instagram, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.instagram, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.facebook, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.facebook, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.twitter, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.twitter, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3"> 
+                {{ form_label(form.mail, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+        {{ form_end(form) }}
+    </div>
+    <div class="col-md-6">
+        <h2>Lista de paginas existentes</h2>
+        <div class="separador"> </div>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ruta</th>
+                    <th>Título</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pagina in paginas %}
+                    <tr>
+                        <td>{{ pagina.ruta }}</td>
+                        <td>{{ pagina.titulo }}</td>
+                        <td>
+                            <a href="{{ path('pagina_edit', {'ruta': pagina.ruta}) }}" class="btn btn-warning btn-sm">Editar</a>
+                            {% if pagina.ruta != 'inicio' %}
+                                <a href="{{ path('pagina_delete', {'ruta': pagina.ruta}) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta página?');">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('pagina_new') }}" class="btn btn-primary btn-sm">Nueva pagina</a>
+        
+    </div>
+</article>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="row">
+    <div class="col-md-6">
+        <h1>Editar menu</h1>
+        <div class="separador"></div>
+        {{ form_start(form) }}
+            <div class="mb-2"> 
+                {{ form_label(form.ruta, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.ruta, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.nombre, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nombre, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-check form-check-inline"> 
+                {{ form_widget(form.visible, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.visible, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.posicion, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.posicion, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.parent, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.parent, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        {{ form_end(form) }}
+    </div>
+</article>
+{% endblock %}

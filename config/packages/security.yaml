@@ -41,6 +41,8 @@ security:
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/perfil, roles: ROLE_USER }
+    - { path: ^/uploads/headers, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/uploads/index, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
   security:

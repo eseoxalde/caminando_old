@@ -3,188 +3,84 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use src\Repository\SitioPaginaRepository;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Pagina;
 use App\Repository\SitioRepository;
 use App\Repository\PaginaRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\MenuRepository;
+use App\Form\PaginaType;
+use App\Form\SitioType;
 
-class SitioController extends AbstractController
+#[Route('/sitio')]
+class SitioController extends BaseController
 {
-
     private $entityManager;
-    private $elSitio;
-    private $facebook;
-    private $instagram;
-    private $twiter;
-    private $mailppal;
-    private $title;
+    private $sitio;
+    private $menues;
 
-    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository)
+    public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository,  MenuRepository $menuRepository)
     {
+        parent::__construct($menuRepository);
         $this->entityManager = $entityManager;
-        $this->elSitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
-        $this->title = $this->elSitio->getNombreSitio() ?: 'Caminando sobre Gliptodontes y Tigres Diente de Sable ';
-        $this->facebook = $this->elSitio->getFacebook() ?? 'https://www.facebook.com/';
-        $this->instagram = $this->elSitio->getInstagram() ?? 'https://www.instagram.com/';
-        $this->twitter = $this->elSitio->getTwiter() ?? 'https://twitter.com/';
+        $this->sitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
+        $this->menues = $menuRepository->findVisibleMenus();
     }
 
-    #[Route('/', name: 'inicio')]
-    public function index(PaginaRepository $paginaRepository): Response
+    #[Route('/edit', name: 'sitio_edit')]
+    public function edit_sitio(Request $request, SitioRepository $sitioRepository, PaginaRepository $paginaRepository): Response
     {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'inicio']);
-       
-        return $this->render('sitio/index.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
+        $form = $this->createForm(SitioType::class, $this->sitio,);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $header = $form['header']->getData();
+            if ($header) {
+                $newFilename = uniqid() . '.' . $header->guessExtension();
+                try {
+                    $header->move(
+                        $this->getParameter('app.page_images_directory'),
+                        $newFilename
+                    );
+                    $sitio->setHeader('/uploads/page_images/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'No se pudo subir la imagen.');
+                }
+            }
+
+            $logo = $form['logo_sitio']->getData();
+            if ($logo) {
+                $newFilename = uniqid() . '.' . $logo->guessExtension();
+                try {
+                    $logo->move(
+                        $this->getParameter('app.page_images_directory'),
+                        $newFilename
+                    );
+                    $sitio->setLogoSitio('/uploads/page_images/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'No se pudo subir la imagen.');
+                }
+            }
+
+            $this->entityManager->persist($sitio);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Sitio actualizado correctamente.');
+            return $this->redirectToRoute('inicio');
+        }
+
+        $paginas = $paginaRepository->findAll();
+
+        return $this->renderWithMenu('sitio/sitio_edit.html.twig', [
+            'paginas' => $paginas, 
+            'sitio' => $this->sitio,
+            'form' => $form->createView(),
+            'menues' => $this->menues,
         ]);
     }
-
-    #[Route('/documental', name: 'documental')]
-    public function documental(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'documental']);
-        return $this->render('sitio/documental.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/actividades', name: 'actividades')]
-    public function actividades(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'actividades']);
-
-        return $this->render('sitio/actividades.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/contacto', name: 'contacto')]
-    public function contacto(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'contacto']);
-
-        return $this->render('sitio/contacto.html.twig', [
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-            'ruta_imagen_tipo1'=>$pagina->getRutaImagenTipo1(),
-            'imagen_tipo1'=>$pagina->isImagenTipo1(),
-        ]);
-    }
-
-    #[Route('/cuentos', name: 'cuentos')]
-    public function cuentos(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'cuentos']);
-
-        return $this->render('sitio/cuentos.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/fichas', name: 'fichas')]
-    public function fichas(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'fichas']);
-
-        return $this->render('sitio/fichas.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/foro', name: 'foro')]
-    public function foro(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'foro']);
-
-        return $this->render('sitio/foro.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/libro', name: 'libro')]
-    public function libro(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'libro']);
-
-        return $this->render('sitio/libro.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-    #[Route('/reconstrucciones', name: 'reconstrucciones')]
-    public function reconstrucciones(PaginaRepository $paginaRepository): Response
-    {
-        $pagina = $paginaRepository->findOneBy(['ruta'=>'reconstrucciones']);
-
-        return $this->render('sitio/actividades.html.twig', [
-            'controller_name' => 'SitioController',
-            'title'=> $this->title,
-            'facebook' => $this->facebook,
-            'instagram' => $this->instagram,
-            'twitter'=>$this->twitter,
-            'titulo'=>$pagina->getTitulo(),
-            'subtitulo'=>$pagina->getsubTitulo(),
-            'texto'=>$pagina->getTexto(),
-        ]);
-    }
-
-  
+    
 }

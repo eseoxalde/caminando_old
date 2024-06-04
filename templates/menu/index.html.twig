@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article>
+    <h2>Lista de menús existentes</h2>
+    <div class="separador"> </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Ruta</th>
+                <th>Visibilidad</th>
+                <th>Posición</th>
+                <th>Padre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for menu in menuTree %}
+                {{ _self.render_menu_row(menu) }}
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+{% endblock %}
+
+{% macro render_menu_row(menu) %}
+    {% set rowClass = '' %}
+    {% if menu.children is defined and menu.children is not empty %}
+        {% set rowClass = 'parent-row' %}
+    {% elseif menu.parent is not null %}
+        {% set rowClass = 'child-row' %}
+    {% else %}
+        {% set rowClass = 'no-children-row' %}
+    {% endif %}
+    <tr class="{{ rowClass }}">
+        <td>{{ menu.nombre }}</td>
+        <td>{{ menu.ruta }}</td>
+        <td>{{ menu.visible ? 'Sí' : 'No' }}</td>
+        <td>{{ menu.posicion }}</td>
+        <td>{{ menu.parent ? menu.parent.nombre : 'Sin padre' }}</td>
+        <td>
+            <a href="{{ path('menu_edit', {'id': menu.id}) }}" class="btn btn-warning btn-sm">Editar</a>
+        </td>
+    </tr>
+    {% if menu.children is defined %}
+        {% for child in menu.children %}
+            {{ _self.render_menu_row(child) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

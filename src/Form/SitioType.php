@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Sitio;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
+
+class SitioType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+        ->add('header', FileType::class, [
+            'label' => 'Imagen del header',
+            'mapped' => false, 
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '5M',
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                    ],
+                    'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF)',
+                ])
+            ],
+        ])
+            ->add('nombre_sitio', TextType::class, [
+                'label' => 'Nombre del sitio',
+                'attr' => ['placeholder' => 'Introduce el nombre del sitio web']
+            ])
+            ->add('logo_sitio', FileType::class, [
+                'label' => 'Logo del sitio',
+                'mapped' => false, 
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF)',
+                    ])
+                ],
+            ])
+            ->add('instagram', TextType::class, [
+                'label' => 'Instagram',
+                'required' => false,
+                'attr' => ['placeholder' => 'Introduce la dirección del instagram']
+            ])
+            ->add('facebook', TextType::class, [
+                'label' => 'Facebook',
+                'required' => false,
+                'attr' => ['placeholder' => 'Introduce la direccipon del facebook']
+            ])
+            ->add('twitter', TextType::class, [
+                'label' => 'X (ex twitter)',
+                'required' => false,
+                'attr' => ['placeholder' => 'Introduce la dirección del twitter']
+            ])
+            ->add('mail', TextType::class, [
+                'label' => 'Correo electrónico',
+                'required' => false,
+                'attr' => ['placeholder' => 'Introduce el correo electrónico']
+            ])
+            ;
+            
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Sitio::class,
+        ]);
+    }
+}

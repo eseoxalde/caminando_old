@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="row">
+    <div class="col-md-6">
+        <h1>Editar Usuario</h1>
+        <div class="separador"> </div>
+        {{ form_start(form) }}
+            <div class="mb-2"> 
+                {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.roles, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.username, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.nombre, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nombre, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.apellido, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.apellido, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-3"> 
+                {{ form_label(form.fechaNacimiento, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.fechaNacimiento, {'attr': {'class': 'form-control', 'placeholder': 'DD/MM/YYYY'}}) }}
+            </div>
+            <div class="form-check form-check-inline"> 
+                {{ form_widget(form.notificaciones, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(form.notificaciones, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+    </div>
+    <div class="col-md-6">
+        {% if sitio.header %}
+            <h4>Foto de perfil</h4>
+            <img class="foto" src="{{ user.foto }}" alt="">
+        {% endif %}
+        <div class="mb-2"> 
+            {{ form_label(form.foto, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.foto, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
+            <img id="preview" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
+        </div>
+         <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </div>
+   
+    {{ form_end(form) }}
+</article>
+{% endblock %}

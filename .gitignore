@@ -22,5 +22,13 @@
 
 ###> symfony/asset-mapper ###
 /public/assets/
+/public/uploads/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+var/*
+!var/cache/
+!var/cache/.gitkeep
+!var/log/
+!var/log/.gitkeep
+
+migrations/Version*.php

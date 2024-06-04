@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="row">
+    <div class="col-md-12">
+        <h2>Lista de usuarios</h2>
+        <div class="separador"> </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>email</th>
+                    <th>Roles</th>
+                    <th>Nombre de usuario</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Foto</th>
+                    <th>Recibe notificaciones</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in usuarios %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.roles|join(', ') }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.nombre }}</td>
+                        <td>{{ user.apellido }}</td>
+                        <td>{{ user.fechaNacimiento|date('Y-m-d') }}</td>
+                        <td>
+                            {% if user.foto %}
+                                <img src="{{ asset(user.foto) }}" alt="Foto de {{ user.username }}" style="max-width: 50px; max-height: 50px;"/>
+                            {% else %}
+                                No disponible
+                            {% endif %}
+                        </td>
+                        <td>{{ user.notificaciones ? 'Sí' : 'No' }}</td>
+                        <td>
+                            <a href="{{ path('usuario_edit', {'id': user.id}) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ path('usuario_delete', {'id': user.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Borrar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</article>
+
+{% endblock %}
