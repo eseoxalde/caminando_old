@@ -15,13 +15,13 @@ use App\Repository\PaginaRepository;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
+#[Route('/perfil')]
 class ProfileController extends BaseController
 {
     private $entityManager;
     private $sitio;
     private $menues;
 
-    #[Route('/perdil')]
     public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository, MenuRepository $menuRepository)
     {
         parent::__construct($menuRepository);

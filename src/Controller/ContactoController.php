@@ -20,6 +20,8 @@ class ContactoController extends BaseController
     private $entityManager;
     private $sitio;
     private $menuRepository;
+    private $menues;
+
 
     public function __construct(EntityManagerInterface $entityManager, SitioRepository $sitioRepository, MenuRepository $menuRepository)
     {
@@ -27,6 +29,7 @@ class ContactoController extends BaseController
         $this->entityManager = $entityManager;
         $this->sitio = $sitioRepository->findOneBy([], ['id' => 'DESC']);
         $this->menuRepository = $menuRepository;
+        $this->menues = $menuRepository->findVisibleMenus();
     }
 
     #[Route('/contacto', name: 'contacto')]
@@ -49,7 +52,7 @@ class ContactoController extends BaseController
                 'sitio' => $this->sitio,
                 'pagina'=>$pagina,
                 'contact_form' => $form->createView(),
-                'menues' => $menues,
+                'menues' => $this->menues,
             ]);
     }
 }

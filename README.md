@@ -1,6 +1,6 @@
 # Proyecto Symfony
 
-Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una estructura básica para la gestión de páginas y menús, y un formulario de contacto.
+Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una estructura básica para la gestión de páginas y barra de navegación, y un formulario de contacto.
 
 ## Requisitos
 
@@ -35,8 +35,6 @@ Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una e
 ## Uso
 
     Visita http://localhost:8000 en tu navegador para ver la aplicación en funcionamiento.
-
-    Accede a /contacto para ver el formulario de contacto.
 
     Administra los menús y páginas desde las rutas correspondientes.
 

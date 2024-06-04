@@ -4,12 +4,16 @@ controllers:
     namespace: App\Controller
   type: attribute
 
+pagina_inicio:
+  path: /
+  controller: App\Controller\PaginaController::inicio
+
+ayuda:
+  path: /ayuda
+  controller: App\Controller\AyudaController::index
+
 pagina_show:
   path: /{ruta}
   controller: App\Controller\PaginaController::show
   requirements:
     ruta: ".+"
-
-pagina_inicio:
-  path: /
-  controller: App\Controller\PaginaController::inicio
