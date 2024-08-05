@@ -49,11 +49,6 @@ final class SitioFactory extends ModelFactory
         return [
             'header' => self::faker()->text(),
             'nombre_sitio'=>self::faker()->text(),
-            'logo_sitio'=>self::faker()->text(),
-            'instagram'=>self::faker()->text(),
-            'facebook'=>self::faker()->text(),
-            'twiter'=>self::faker()->text(),
-            'mail'=>self::faker()->text(),
         ];
     }
 

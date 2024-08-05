@@ -5,9 +5,10 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-use App\Factory\sitioFactory;
 use App\Factory\UserFactory;
-use App\Factory\paginaFactory;
+use App\Factory\PaginaFactory;
+use App\Factory\SitioFactory;
+
 
 class AppFixtures extends Fixture
 {
@@ -19,20 +20,19 @@ class AppFixtures extends Fixture
             'password'=>$password,
             'roles' => ['ROLE_ADMIN']
         ]);
+        PaginaFactory::createOne([
+            'titulo' =>  'inicio',
+            'subtitulo' =>  'pagina de inicio - se debe cambiar',
+            'ruta' => 'inicio',
+        ]);
+        SitioFactory::createOne([
+            'header' => 'cambiar',
+            'nombre_sitio'=>'cambiame'
+        ]);
 
         UserFactory::createMany(6);
-        
-        sitioFactory::createMany(1);
 
-        $rutas = ['actividades', 'documental', 'contacto', 'reconstrucciones', 'inicio', 'libro', 'fichas', 'cuentos', 'foro', 'perfil'];
-        $titulo = ['actividades', 'documental', 'contacto', 'reconstrucciones', 'inicio', 'libro', 'fichas', 'cuentos', 'foro', 'perfil'];
 
-        foreach ($rutas as $index => $ruta) {
-            PaginaFactory::createOne([
-                'ruta' => $ruta,
-                'titulo' => $titulo[$index],
-            ]);
-        }
 
-    }
+}
 }

@@ -49,7 +49,7 @@ final class PaginaFactory extends ModelFactory
         return [
             'titulo' =>  self::faker()->text(),
             'subtitulo' =>  self::faker()->text(),
-            'texto' =>  self::faker()->text(),
+
             'ruta' =>  self::faker()->word(),
         ];
     }

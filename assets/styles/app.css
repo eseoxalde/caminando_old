@@ -6,10 +6,17 @@ body {
     font-size: 16px;
 }
 
+.logo {
+    text-align: center;
+}
 .logo img {
-    width: 100%;
+    width: auto;
+    max-height: 250px;
 }
 
+.inicio{
+    order: -1
+}
 header i {
     color: antiquewhite;
 }
@@ -48,38 +55,32 @@ header i {
 .col-md-6 {
     padding: 15px;
 }
-
+/** tabbla */
 .table {
     font-size: 0.875rem; 
 }
-
 .table th {
     background-color: #767676; 
     color: #ffffffce;
     font-size: 1rem; 
 }
-
 .table td img.user-photo {
     border-radius: 50%;
     object-fit: cover;
     width: 50px;
     height: 50px;
 }
-
 .parent-row {
     background-color: #D68910; 
 }
-
-
 .child-row {
     background-color: #F8C471; 
 }
-
-
 .no-children-row {
     background-color: #9C640C;
     color:beige
 }
+/***/
 
 .container-fluid h1 {
     font-size: 1.8em;
@@ -102,11 +103,44 @@ header i {
     width: 70%;
     padding: 5px;
 }
-
-.img-logo-contacto {
+/** imagenes*/
+.img-logo {
+    max-width: auto;
+    max-height: 300px;
+}
+.img-contacto{
     max-width: 90%;
-    height: auto;
+    max-height: auto;
     opacity: 0.5;
+}
+.img-unica{
+    max-width: auto;
+    max-height: 500px;
+}
+.img-muestra {
+    max-width: 100px;
+    height: auto;
+}
+.conteiner-imagen{
+    text-align: center;
+}  
+    
+/** select */
+.form-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.form-select {
+    width: 80%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    border: 1px solid #d9a97c;
+    background-color: antiquewhite;
+    background-clip: padding-box;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .grid-container {
