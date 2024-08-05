@@ -33,8 +33,23 @@ class PaginaController extends BaseController
     public function inicio(PaginaRepository $paginaRepository): Response
     {
         $pagina = $paginaRepository->findOneBy(['ruta' => 'inicio']);
+        $carpetas = $pagina ? $pagina->getCarpetas() : null;
 
         return $this->renderWithMenu('sitio/index.html.twig', [
+            'sitio' => $this->sitio,
+            'pagina' => $pagina,
+            'carpeta' => $carpetas,
+            'menues' => $this->menues,
+        ]);
+
+    }
+
+    #[Route('/contacto', name: 'contacto')]
+    public function contacto(PaginaRepository $paginaRepository): Response
+    {
+        $pagina = $paginaRepository->findOneBy(['ruta' => 'contacto']);
+
+        return $this->renderWithMenu('contacto/contacto.html.twig', [
             'sitio' => $this->sitio,
             'pagina' => $pagina,
             'menues' => $this->menues,
@@ -68,6 +83,20 @@ class PaginaController extends BaseController
                     'form' => $form->createView(),
                     'menues' => $this->menues,
                 ]);
+            }
+
+            $fotoFile = $form['ruta_imagen_unica']->getData();
+            if ($fotoFile) {
+                $newFilename = uniqid() . '.' . $fotoFile->guessExtension();
+                try {
+                    $fotoFile->move(
+                        $this->getParameter('app.page_images_directory'),
+                        $newFilename
+                    );
+                    $pagina->setRutaImagenUnica('/uploads/page_images/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'No se pudo subir la imagen.');
+                }
             }
 
             $this->entityManager->persist($pagina);

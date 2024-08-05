@@ -44,30 +44,30 @@ class SitioController extends BaseController
                 $newFilename = uniqid() . '.' . $header->guessExtension();
                 try {
                     $header->move(
-                        $this->getParameter('app.page_images_directory'),
+                        $this->getParameter('app.logo_images_directory'),
                         $newFilename
                     );
-                    $sitio->setHeader('/uploads/page_images/' . $newFilename);
+                    $this->sitio->setHeader('/uploads/logo/' . $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'No se pudo subir la imagen.');
                 }
             }
 
-            $logo = $form['logo_sitio']->getData();
+            $logo = $form['logoSitio']->getData();
             if ($logo) {
                 $newFilename = uniqid() . '.' . $logo->guessExtension();
                 try {
                     $logo->move(
-                        $this->getParameter('app.page_images_directory'),
+                        $this->getParameter('app.logo_images_directory'),
                         $newFilename
                     );
-                    $sitio->setLogoSitio('/uploads/page_images/' . $newFilename);
+                    $this->sitio->setLogoSitio('/uploads/logo/' . $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'No se pudo subir la imagen.');
                 }
             }
 
-            $this->entityManager->persist($sitio);
+            $this->entityManager->persist($this->sitio);
             $this->entityManager->flush();
             $this->addFlash('success', 'Sitio actualizado correctamente.');
             return $this->redirectToRoute('inicio');

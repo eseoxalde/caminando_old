@@ -37,6 +37,9 @@ class RegistrationController extends BaseController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$user->getFoto()) {
+                $user->setFoto('img/default-profile.png');
+            }
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
