@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PaginaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,7 +43,11 @@ class Pagina
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $ruta_video = null;
 
-    
+    #[ORM\ManyToOne(targetEntity: Carpeta::class, inversedBy: 'paginas')]
+    private ?Carpeta $carpeta = null;
+
+    public function __construct()
+    { }
 
     public function getId(): ?int
     {
@@ -161,5 +167,18 @@ class Pagina
         $this->menu = $menu;
 
         return $this;
-}
+    }
+
+    public function getCarpeta(): ?Carpeta
+    {
+        return $this->carpeta;
+    }
+
+    public function setCarpeta(?Carpeta $carpeta): static
+    {
+        $this->carpeta = $carpeta;
+
+        return $this;
+    }
+
 }
