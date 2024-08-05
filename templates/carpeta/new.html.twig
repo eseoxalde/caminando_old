@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear carpeta nueva{% endblock %}
+
+{% block body %}
+ {% for carpet in carpeta %}
+    {{ carpet }}
+ {% endfor %}
+
+ <article class="row">
+    <div class="col-md-6">
+        <h1>Crear carpeta nueva</h1>
+        <div class="separador"> </div>
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.nombre, 'Nombre') }}
+            {{ form_widget(form.nombre, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.descripcion, 'Descripción') }}
+            {{ form_widget(form.descripcion, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+    <button type="submit" class="btn btn-primary m-3">Crear</button>
+    <button type="button" class="btn btn-secondary m-3" onclick="window.history.back()">Cancelar</button>
+
+    {{ form_end(form) }}
+    </div>
+    <div class="col-md-6">
+        <h1>Carpetas existentes</h1>
+        <div class="separador"> </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Pertenece a la pagina</th>
+                </tr>
+            </thead>
+        <tbody>
+            {% for carpeta in carpetas %}
+                <tr>
+                    <td>{{ carpeta.nombre }}</td>
+                   <td>{{ carpeta.pagina ? carpeta.pagina.titulo : 'Sin página' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    </article>
+{% endblock %}

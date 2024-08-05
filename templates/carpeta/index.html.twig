@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article>
+    <h1>Lista de Carpetas</h1>
+    <div class="separador"> </div>
+    <div class="d-flex justify-content-end">
+        <a href="{{ path('carpeta_new') }}" class="btn btn-success mb-3">Crear carpeta nueva</a>
+    </div>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Cantidad de imagenes</th>
+                <th>Pertenece a la pagina</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for carpeta in carpetas %}
+                <tr>
+                    <td>{{ carpeta.nombre }}</td>
+                    <td>{{ carpeta.descripcion }}</td>
+                    <td>{{ carpeta.imagenes|length }}</td>
+                    <td>{{ carpeta.pagina ? carpeta.pagina.titulo : 'Sin página' }}</td>
+                    <td>
+                        <a href="{{ path('carpeta_show', {'id': carpeta.id}) }}" class="btn btn-info">Ver</a>
+                        <a href="{{ path('carpeta_edit', {'id': carpeta.id}) }}" class="btn btn-warning">Cambiar nombre</a>
+                        <form action="{{ path('carpeta_delete', {'id': carpeta.id}) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ carpeta.id) }}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger">Borrar</button>
+                        </form> 
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+{% endblock %}

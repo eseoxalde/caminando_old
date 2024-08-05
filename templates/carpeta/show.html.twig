@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+ <article class="row">
+    <div class="col-md-6">
+        <h1>Carpeta: {{ carpeta.nombre }}</h1>
+        <div class="separador"> </div>
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.path, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.path, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this, "preview-carpeta")'}}) }}
+            <img id="preview-carpeta" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
+        </div>
+        <div class="mb-3"> 
+            {{ form_label(form.altText, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.altText, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button class="btn btn-primary">Agregar Imagen</button>
+        {{ form_end(form) }}
+    </div>
+    <div class="col-md-6">
+        <h1>Imágenes</h1>
+        <div class="separador"> </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Texto Alternativo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for imagen in carpeta.imagenes %}
+                    <tr>
+                        <td><img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}" style="max-height: 100px;"></td>
+                        <td>{{ imagen.altText }}</td>
+                        <td><a href="" class="btn btn-danger">Borrar</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{{ path('carpeta_index') }}" class="btn btn-secondary m-3">Volver</a>
+</article>
+{% endblock %}
