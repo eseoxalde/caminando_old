@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article>
+    <h2>Lista de imágenes existentes</h2>
+    <div class="separador"></div>       
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ruta</th>
+                <th>Texto alternativo</th>
+                <th>Previsualización</th>
+                <th>Página</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for imagen in imagenes %}
+                <tr>
+                    <td>{{ imagen.path }}</td>
+                    <td>{{ imagen.altText }}</td>
+                    <td>
+                        <img src="{{ asset(imagen.path) }}" alt="{{ imagen.altText }}" class="img-fluid">
+                    </td>
+                    <td>{{ imagen.pagina }}</td>
+                    <td>
+                        <a href="{{ path('pagina_edit', {'ruta': imagen.pagina.ruta}) }}" class="btn btn-warning btn-sm">Editar</a>
+                        {% if imagen.pagina.ruta != 'inicio' %}
+                            <a href="{{ path('pagina_delete', {'ruta': imagen.pagina.ruta}) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta página?');">Borrar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+
+{% endblock %}

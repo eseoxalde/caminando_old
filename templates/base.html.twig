@@ -33,53 +33,64 @@
             toolbar: 'undo redo | bold italic | alignleft aligncenter alignright'
         });
 
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+        function previewImage(input, previewId) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('#preview').attr('src', e.target.result).show();
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
+        reader.onload = function (e) {
+            $('#' + previewId).attr('src', e.target.result).show();
         }
 
-        function toggleContentFields() {
-            const contentTypeInput = document.querySelector('input[name="pagina[contenidoTipo]"]:checked');
-            if (!contentTypeInput) {
-                return;
-            }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
-            const contentType = contentTypeInput.value;
-            const imageFields = document.getElementById('imageFields');
-            const videoFields = document.getElementById('videoFields');
+function toggleContentFields() {
+    const contentTypeSelect = document.querySelector('select[name="pagina[contenidoTipo]"]');
+    if (!contentTypeSelect) {
+        return;
+    }
 
-            if (!imageFields || !videoFields) {
-                return;
-            }
+    const contentType = contentTypeSelect.value;
+    const imageFields = document.getElementById('imageFields');
+    const videoFields = document.getElementById('videoFields');
+    const carrusellFields = document.getElementById('carrusellFields');
 
-            if (contentType === 'imagen') {
-                imageFields.style.display = 'block';
-                videoFields.style.display = 'none';
-            } else if (contentType === 'video') {
-                imageFields.style.display = 'none';
-                videoFields.style.display = 'block';
-            } else {
-                imageFields.style.display = 'none';
-                videoFields.style.display = 'none';
-            }
-        }
+    if (!imageFields || !videoFields || !carrusellFields) {
+        return;
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleContentFields();
-        });
+    if (contentType === 'imagen') {
+        imageFields.style.display = 'block';
+        videoFields.style.display = 'none';
+        carrusellFields.style.display = 'none';
+    } else if (contentType === 'video') {
+        imageFields.style.display = 'none';
+        videoFields.style.display = 'block';
+        carrusellFields.style.display = 'none';
+    } else if (contentType === 'carrusel') {
+        imageFields.style.display = 'none';
+        videoFields.style.display = 'none';
+        carrusellFields.style.display = 'block';
+    } else {
+        imageFields.style.display = 'none';
+        videoFields.style.display = 'none';
+        carrusellFields.style.display = 'none';
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    toggleContentFields();
+});
+
+document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener('change', toggleContentFields);
     </script>
 </head>
 <body>
 <header>
     <div class="logo">
-        <a href="{{ path('inicio') }}"><img src="{{ sitio.header }}" alt="logo de Caminando sobre gliptodontes y tigres diente de sable"></a>
+        <a href="{{ path('inicio') }}"><img src="{{ sitio.header }}" alt="logo de {{sitio.nombreSitio}}"></a>
     </div>
     <nav class="navbar navbar-expand-md container-fluid">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +98,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link inicio" href="{{ path('inicio') }}" title="Inicio">Inicio</a>
+                </li>
                 {% for menu in menues %}
                     {% if menu.parent is null %}
                         <li class="nav-item {% if menu.children|length > 0 %}dropdown{% endif %}">
@@ -121,6 +135,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil">Perfil</a>
+                            <a class="dropdown-item" href="#" title="Alfo mas">Algo mas</a>
                             <a class="dropdown-item" href="{{ path('app_logout') }}" title="Salir">Salir</a>
                         </div>
                     </li>
@@ -130,11 +145,14 @@
                                 Configuración
                             </a>
                             <div class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <a class="dropdown-item" href="{{ path('ayuda') }}" title="Ayuda">Ayuda</a>
+                                <a class="dropdown-item" href="{{ path('ayuda') }}" title="Ayuda">Manual de uso</a>
                                 <a class="dropdown-item" href="{{ path('sitio_edit') }}" title="Configuración general">Configuración general</a>
                                 <a class="dropdown-item" href="{{ path('pagina_index') }}" title="Páginas">Páginas</a>
                                 <a class="dropdown-item" href="{{ path('menu_index') }}" title="Menu">Menu de navegación</a>
+                                <a class="dropdown-item" href="#" title="Galerias de imagenes">Galerias de imagenes</a>
                                 <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios">Usuarios</a>
+                                <a class="dropdown-item" href="{{ path('carpeta_index') }}" title="Carpetas">Carpetas</a>
+                                <a class="dropdown-item" href="{{ path('app_imagen') }}" title="Imagenes">Imagenes</a>
                             </div>
                         </li>
                     {% endif %}

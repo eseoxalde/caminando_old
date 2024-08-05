@@ -3,15 +3,59 @@
 {% block body %}
 
 <article class="row">
-                <div class="col-md-6">
-                    <h1>{{ pagina.titulo }}</h1>
-                    <div class="separador"> </div>
-                    <h2>{{ pagina.subtitulo }}</h2>
-                    {{ pagina.texto | raw }} 
-                </div>
-                <div class="col-md-6">
-      
-                </div>
-            </article>
+    <div class="col-md-6">
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('pagina_edit', {'ruta':pagina.ruta }) }}" class="btn btn-primary d-block mt-2">
+                Editar esta página
+            </a>
+        {% endif %}
+        {% for flash_message in app.session.flashBag.get('success') %}
+            <div    class="alert alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        <h1>{{ pagina.titulo }} </h1>
 
+        <div class="separador"> </div>
+        <h2>{{ pagina.subtitulo }}</h2>
+        {{ pagina.texto | raw }} 
+    </div>
+    <div class="col-md-6">
+        {% if pagina.contenidoTipo == 'imagen' and pagina.rutaImagenUnica is not empty %}
+            <div class="conteiner-imagen">
+                <img class="img-unica" src="{{ pagina.rutaImagenUnica }}" alt="{{ pagina.textoAltImagenUnica }}">
+            </div>
+        {% elseif pagina.contenidoTipo == 'video' and pagina.RutaVideo is not empty%}
+            <div>
+                <div class="embed-responsive embed-responsive-16by9">
+                    {{ pagina.RutaVideo | raw }}
+                </div>
+            </div>
+        {% elseif pagina.contenidoTipo == 'carrusel' and carpeta is not empty %}
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {% for imagen in carpeta.imagenes %}
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ loop.index0 }}" class="{% if loop.first %}active{% endif %}"></li>
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for imagen in carpeta.imagenes %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img class="d-block w-100" src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</article>
 {% endblock %}
+

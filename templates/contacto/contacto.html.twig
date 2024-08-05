@@ -1,32 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+ <h1>Contacto</h1>
+    <div class="separador"> </div>
 <article class="row">
-    <div class="col-md-6">
-        <h1>Contacto</h1>
-        <div class="separador"> </div>
-            {% for message in app.session.flashBag.get('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-            {% endfor %}
-
-            {{ form_start(contact_form, {'attr': {'class': 'form'}}) }}
-            {{ form_row(contact_form.nombre, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(contact_form.email, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(contact_form.asunto, {'attr': {'class': 'form-control'}}) }}
-            {{ form_row(contact_form.mensaje, {'attr': {'class': 'form-control', 'rows': 5}}) }}
-            
-            <button class="btn btn-lg btn-primary" type="submit">Enviar</button>
-
-            {{ form_end(contact_form) }}       
+   
+        <div class="col-md-8">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf0nBIZgBTNyvDHGUeyOqT6ndPXz0IAlhZjlaNfSQtwrlZbxA/viewform?embedded=true" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
         </div>
-        <div class="col-md-6">
-           
-
+        <div class="col-md-4">
+           <img class="img-contacto" src="{{ sitio.logoSitio }}" alt="logo de {{sitio.nombreSitio}}">
         </div>
-        
+    </div> 
 </article>
 
 {% endblock %}

@@ -9,10 +9,10 @@
     </div>
     {% endfor %}
  <h1>Editar perfil</h1>
-            <div class="separador"> </div>
+ <div class="separador"> </div>
     <div class="row justify-content-center"> 
         <div class="col-md-4 text-center">
-            {% if app.user.getFoto() %}
+        {% if app.user.getFoto() %}
         <img src="{{ asset(app.user.getFoto()) }}" alt="Foto de perfil" class="img-fluid rounded-circle" width="150" height="150">
         {% else %}
             <img src="{{ asset('img/default-profile.png') }}" alt="Foto de perfil predeterminada" class="img-fluid rounded-circle" width="150" height="150">
@@ -22,9 +22,10 @@
 
         <div class="col-md-6"> 
             {{ form_start(form) }}
-            <div class="mb-2"> 
+                <div class="mb-2"> 
                 {{ form_label(form.foto, null, {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.foto, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.foto, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this, "preview1")'}}) }}
+                <img id="preview1" src="#" alt="Vista previa de la foto de perfil" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
             </div>
             <div class="mb-2"> 
                 {{ form_label(form.username, null, {'label_attr': {'class': 'form-label'}}) }}
@@ -42,12 +43,14 @@
                 {{ form_label(form.fechaNacimiento, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.fechaNacimiento, {'attr': {'class': 'form-control', 'placeholder': 'DD/MM/YYYY'}}) }}
             </div>
-
             <div class="form-check form-check-inline"> 
                 {{ form_widget(form.notificaciones, {'attr': {'class': 'form-check-input'}}) }}
                 {{ form_label(form.notificaciones, null, {'label_attr': {'class': 'form-check-label'}}) }}
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+            <div class="mb-2"> 
+                <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+                <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
+            </div>
             {{ form_end(form) }}
         </div>
     </div>

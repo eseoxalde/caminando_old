@@ -28,23 +28,18 @@
                 {{ form_label(form.texto, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.texto, {'attr': {'class': 'form-control tinymce'}}) }}
             </div>
-            <div class="mb-5">
-                {{ form_label(form.contenidoTipo, null, {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.contenidoTipo, {'attr': {'class': 'form-check-input', 'onchange': 'toggleContentFields()'}}) }}
-            </div>
     </div>
     <div class="col-md-6">
+        <div class="mb-5">
+            {{ form_label(form.contenidoTipo, 'Tipo de Contenido', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.contenidoTipo, {'attr': {'class': 'form-select', 'onchange': 'toggleContentFields()'}}) }}
+        </div>
         <div id="imageFields" style="display: none;">
             <div class="mb-2"> 
                 {{ form_label(form.ruta_imagen_unica, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.ruta_imagen_unica, {'attr': {'class': 'form-control', 'onchange': 'previewImage(this)'}}) }}
                 <img id="preview" src="#" alt="Vista previa de la imagen" style="max-width: 100%; max-height: 150px; margin-top: 10px; display: none;">
             </div>
-        {% if form_errors(form.ruta_imagen_unica) %}
-            <div class="alert alert-danger" role="alert">
-                {{ form_errors(form.ruta_imagen_unica) }}
-            </div>
-        {% endif %}
             <div class="mb-2"> 
                 {{ form_label(form.texto_alt_imagen_unica, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.texto_alt_imagen_unica, {'attr': {'class': 'form-control'}}) }}
@@ -56,7 +51,17 @@
                 {{ form_widget(form.ruta_video, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
+        <div id="carrusellFields" style="display: none;">
+            <div class="mb-2"> 
+                <p>Hola</p>
+                <h2>Imágenes</h2>
+                {{ form_row(form.carpetaImagenes) }}
+                <a href="{{ path('carpeta_new') }}" class="btn btn-secondary">Crear nueva carpeta</a>
+                {{ form_row(form.nuevaCarpeta) }}
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+        <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
         {{ form_end(form) }}
     </div>
 </article>

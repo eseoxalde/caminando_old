@@ -5,6 +5,9 @@
 <article>
         <h2>Lista de paginas existentes</h2>
         <div class="separador"> </div>
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('pagina_new') }}" class="btn btn-primary mt-3">Nueva página</a>
+        </div>        
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -34,8 +37,6 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('pagina_new') }}" class="btn btn-primary btn-sm">Nueva pagina</a>
-
 </article>
 
 {% endblock %}

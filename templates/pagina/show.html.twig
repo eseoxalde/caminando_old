@@ -23,14 +23,33 @@
     <div class="col-md-6">
         {% if pagina.contenidoTipo == 'imagen' and pagina.rutaImagenUnica is not empty %}
             <div>
-                <img class="img-logo-contacto" src="{{ pagina.rutaImagenUnica }}" alt="{{ pagina.textoAltImagenUnica }}">
+                <img class="img-unica" src="{{ pagina.rutaImagenUnica }}" alt="{{ pagina.textoAltImagenUnica }}">
             </div>
-        {% elseif pagina.contenidoTipo == 'video' and pagina.RutaVideo is not empty%}
+        {% elseif pagina.contenidoTipo == 'video' and pagina.RutaVideo is not empty %}
             <div>
                 <div class="embed-responsive embed-responsive-16by9">
                     {{ pagina.RutaVideo | raw }}
                 </div>
             </div>
+        {% elseif pagina.contenidoTipo == 'carrusel' and pagina.carpeta is not empty %}
+            <h3>Carrusel</h3>
+            <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner">
+            {% for imagen in pagina.carpeta.imagenes %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ asset(imagen.path) }}" class="d-block w-100" alt="{{ imagen.altText }}">
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+  </button>
+</div>
         {% endif %}
     </div>
 </article>
