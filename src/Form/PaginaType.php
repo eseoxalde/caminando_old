@@ -18,12 +18,27 @@ use Symfony\Component\Form\FormEvent;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use App\Repository\CarpetaRepository;
 
 
 class PaginaType extends AbstractType
 {
+    private CarpetaRepository $carpetaRepository;
+
+    public function __construct(CarpetaRepository $carpetaRepository)
+    {
+        $this->carpetaRepository = $carpetaRepository;
+    }
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $carpetas = $this->carpetaRepository->findAll();
+        $choices = [];
+        foreach ($carpetas as $carpeta) {
+            $choices[$carpeta->getNombre()] = $carpeta->getId();
+        }
         $builder
             ->add('ruta', TextType::class, [
                 'label' => 'Ruta',
@@ -53,13 +68,14 @@ class PaginaType extends AbstractType
             ->add('contenidoTipo', ChoiceType::class, [
                 'label' => 'Tipo de Contenido',
                 'choices' => [
-                    'Vacío' => 'vacio',
-                    'Imagen' => 'imagen',
+                    'Sin contenido' => 'vacio',
                     'Video' => 'video',
+                    'Una imagen única' => 'imagen',
+                    'Carrusel de imagenes' => 'carrusel',
                 ],
-                'expanded' => true,
-                'multiple' => false,
-                'data' => 'vacio',
+                'expanded' => false, 
+                'multiple' => false, 
+                'data' => 'vacio', 
             ])
             ->add('ruta_imagen_unica', FileType::class, [
                 'label' => 'Imagen',
@@ -88,8 +104,17 @@ class PaginaType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'Escribe tu mensaje aquí', 'rows' => 6]
             ])
-            ;
-            
+            ->add('carpeta', ChoiceType::class, [
+                'label' => 'Carpeta de Imágenes',
+                'choices' => $choices,
+                'required' => false,
+                'placeholder' => 'Seleccione una carpeta de imágenes',
+            ])
+            ->add('nuevaCarpeta', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Crear nueva carpeta'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

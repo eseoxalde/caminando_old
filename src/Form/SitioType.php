@@ -42,7 +42,7 @@ class SitioType extends AbstractType
                 'label' => 'Nombre del sitio',
                 'attr' => ['placeholder' => 'Introduce el nombre del sitio web']
             ])
-            ->add('logo_sitio', FileType::class, [
+            ->add('logoSitio', FileType::class, [
                 'label' => 'Logo del sitio',
                 'mapped' => false, 
                 'required' => false,

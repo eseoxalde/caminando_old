@@ -1,6 +1,4 @@
 <?php
-// src/Form/MenuType.php
-
 namespace App\Form;
 
 use App\Entity\Menu;
@@ -25,7 +23,7 @@ class MenuType extends AbstractType
                     'class' => 'form-control',
                 ]            ])
             ->add('nombre', TextType::class, [
-                'label' => 'Nombre',
+                'label' => 'Nombre para la barra de navegación',
                 'disabled' => true,
                 'required' => false,
                 'attr' => [
