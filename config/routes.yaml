@@ -8,6 +8,10 @@ pagina_inicio:
   path: /
   controller: App\Controller\PaginaController::inicio
 
+contacto:
+  path: /contacto
+  controller: App\Controller\PaginaController::contacto
+
 ayuda:
   path: /ayuda
   controller: App\Controller\AyudaController::index

@@ -67,7 +67,7 @@ class MenuController extends BaseController
         $branch = [];
         foreach ($menus as $menu) {
             if ($menu->getParent() === $parent) {
-                $children = $menu->getChildrenArray($menu); // Filtrar hijos solo para este menú
+                $children = $menu->getChildrenArray($menu); 
                 $menu->setChildren($this->buildMenuTree($menus, $menu));
                 $branch[] = $menu;
             }

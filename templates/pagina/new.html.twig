@@ -25,7 +25,7 @@
             </div>
     </div>
     <div class="col-md-6">
-        <div class="mb-5">
+        <div class="mb-5 mt-5">
             {{ form_label(form.contenidoTipo, 'Tipo de Contenido', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(form.contenidoTipo, {'attr': {'class': 'form-select', 'onchange': 'toggleContentFields()'}}) }}
         </div>
@@ -46,16 +46,21 @@
                 {{ form_widget(form.ruta_video, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
-<div id="carrusellFields" style="display: none;">
-    <div class="mb-2"> 
-        <p>Hola</p>
-        <h2>Imágenes</h2>
-        {{ form_row(form.carpetaImagenes) }}
-        <a href="{{ path('carpeta_new') }}" class="btn btn-secondary">Crear nueva carpeta</a>
-        
-        {{ form_row(form.nuevaCarpeta) }}
-    </div>
-</div>
+        <div id="carrusellFields" style="display: none;">
+            <div class="mb-2">
+                {% if pagina.carpeta %}
+                    <p>Carpeta asociada: {{ pagina.carpeta.nombre }}</p>
+                {% else %}
+                    <label for="carpetaSelect">Selecciona una:</label>
+                    {{ form_label(form.carpeta, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.carpeta, {'attr': {'class': 'form-select'}}) }}
+                    <div class="mb-2">
+                        <a href="{{ path('carpeta_new') }}" class="btn btn-warning mt-3">Crear nueva carpeta</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
         <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
         {{ form_end(form) }}

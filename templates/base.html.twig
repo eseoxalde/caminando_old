@@ -152,7 +152,6 @@ document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener(
                                 <a class="dropdown-item" href="#" title="Galerias de imagenes">Galerias de imagenes</a>
                                 <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios">Usuarios</a>
                                 <a class="dropdown-item" href="{{ path('carpeta_index') }}" title="Carpetas">Carpetas</a>
-                                <a class="dropdown-item" href="{{ path('app_imagen') }}" title="Imagenes">Imagenes</a>
                             </div>
                         </li>
                     {% endif %}
@@ -185,9 +184,15 @@ document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener(
             <div class="col-sm-4">
                 <nav>
                     <ul>
-                        <li><a href="{{ sitio.instagram }}" title="instagram"><i class="fa-brands fa-instagram"></i></a></li>
-                        <li><a href="{{ sitio.facebook }}" title="facebook"><i class="fa-brands fa-square-facebook"></i></a></li>
-                        <li><a href="{{ sitio.twitter }}" title="X"><i class="fa-brands fa-twitter"></i></a></li>
+                        {% if sitio.instagram is not null %}
+                            <li><a href="{{ sitio.instagram }}" title="instagram"><i class="fa-brands fa-instagram"></i></a></li>
+                        {% endif %}
+                        {% if sitio.facebook is not null %}
+                            <li><a href="{{ sitio.facebook }}" title="facebook"><i class="fa-brands fa-square-facebook"></i></a></li>
+                        {% endif %}
+                        {% if sitio.twitter is not null %}
+                            <li><a href="{{ sitio.twitter }}" title="X"><i class="fa-brands fa-twitter"></i></a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>

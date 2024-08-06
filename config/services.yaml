@@ -6,6 +6,9 @@
 parameters:
   app.user_profile_pictures_directory: "%kernel.project_dir%/public/uploads/profile_pictures"
   app.page_images_directory: "%kernel.project_dir%/public/uploads/page_images"
+  app.logo_images_directory: "%kernel.project_dir%/public/uploads/logo"
+  app.images_directory: "%kernel.project_dir%/public/uploads/images_directory"
+  directories_path: "%kernel.project_dir%/public/uploads/images_directory/"
 
 services:
   # default configuration for services in *this* file

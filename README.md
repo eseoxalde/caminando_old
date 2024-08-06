@@ -29,7 +29,11 @@ Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una e
    symfony console doctrine:database:create
    symfony console doctrine:migrations:migrate
 
-5. Inicia el servidor de desarrollo
+5. Crear un usuario admin y los datos necesarios para comenzar a trabajar
+   php bin/console doctrine:fixtures:load
+   admin@admin.com - admin123
+
+6. Inicia el servidor de desarrollo
    symfony server:start
 
 ## Uso

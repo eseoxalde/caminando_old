@@ -3,7 +3,7 @@
 {% block body %}
 
 <article class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 border border-2">
         <h1>Configuración general del sitio</h1>
         <div class="separador"> </div>
         {{ form_start(form) }}
@@ -43,12 +43,12 @@
                 {{ form_label(form.mail, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+            <button type="submit" class="btn btn-primary mt-3 mr-2">Guardar cambios</button>
             <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
         {{ form_end(form) }}
     </div>
     <div class="col-md-6">
-        <h2>Lista de paginas existentes</h2>
+        <h2 class="mt-2">Lista de paginas existentes</h2>
         <div class="separador"> </div>
         {% for label, messages in app.flashes %}
             {% for message in messages %}
@@ -69,7 +69,7 @@
                         <td>{{ pagina.ruta }}</td>
                         <td>{{ pagina.titulo }}</td>
                         <td>
-                            <a href="{{ path('pagina_edit', {'ruta': pagina.ruta}) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{{ path('pagina_edit', {'ruta': pagina.ruta}) }}" class="btn btn-warning btn-sm mr-2">Editar</a>
                             {% if pagina.ruta != 'inicio' %}
                                 <a href="{{ path('pagina_delete', {'ruta': pagina.ruta}) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta página?');">Borrar</a>
                             {% endif %}
@@ -78,7 +78,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ path('pagina_new') }}" class="btn btn-primary mt-3">Nueva pagina</a>
+        <a href="{{ path('pagina_new') }}" class="btn btn-success mt-3">Nueva pagina</a>
         
     </div>
 </article>

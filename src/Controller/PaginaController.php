@@ -13,6 +13,7 @@ use App\Entity\Menu;
 use App\Repository\SitioRepository;
 use App\Repository\PaginaRepository;
 use App\Repository\MenuRepository;
+use App\Repository\CarpetaRepository;
 use App\Form\PaginaType;
 
 #[Route('/pagina')]
@@ -33,12 +34,12 @@ class PaginaController extends BaseController
     public function inicio(PaginaRepository $paginaRepository): Response
     {
         $pagina = $paginaRepository->findOneBy(['ruta' => 'inicio']);
-        $carpetas = $pagina ? $pagina->getCarpetas() : null;
+        $carpeta = $pagina ? $pagina->getCarpeta() : null;
 
         return $this->renderWithMenu('sitio/index.html.twig', [
             'sitio' => $this->sitio,
             'pagina' => $pagina,
-            'carpeta' => $carpetas,
+            'carpeta' => $carpeta,
             'menues' => $this->menues,
         ]);
 
@@ -68,11 +69,13 @@ class PaginaController extends BaseController
     }
 
     #[Route('/new', name: 'pagina_new')]
-    public function new(Request $request, PaginaRepository $paginaRepository): Response
+    public function new(Request $request, PaginaRepository $paginaRepository, CarpetaRepository $carpetaRepository,): Response
     {
         $pagina = new Pagina();
         $form = $this->createForm(PaginaType::class, $pagina);
         $form->handleRequest($request);
+
+        $carpetas = $carpetaRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $existingPage = $paginaRepository->findOneBy(['ruta' => $pagina->getRuta()]);
@@ -82,6 +85,7 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
+                    'pagina'=>$pagina,
                 ]);
             }
 
@@ -108,6 +112,8 @@ class PaginaController extends BaseController
             $menu->setVisible(true);
             $menu->setPosicion(0);
 
+            $pagina->setMenu($menu);
+
             $this->entityManager->persist($menu);
             $this->entityManager->flush();
 
@@ -119,6 +125,8 @@ class PaginaController extends BaseController
             'sitio' => $this->sitio,
             'form' => $form->createView(),
             'menues' => $this->menues,
+            'carpetas' => $carpetas,
+            'pagina'=>$pagina,
         ]);
     }
 
@@ -150,12 +158,13 @@ class PaginaController extends BaseController
     }
 
     #[Route('/edit/{ruta}', name: 'pagina_edit')]
-    public function edit(string $ruta, PaginaRepository $paginaRepository, MenuRepository $menuRepository, Request $request): Response
+    public function edit(string $ruta,  CarpetaRepository $carpetaRepository, PaginaRepository $paginaRepository, MenuRepository $menuRepository, Request $request): Response
     {
         $pagina = $paginaRepository->findOneBy(['ruta' => $ruta]);
         if (!$pagina) {
             throw $this->createNotFoundException('La página no existe');
         }
+        $carpetas = $carpetaRepository->findAll();
 
         $rutaAnterior = $pagina->getRuta();
         $form = $this->createForm(PaginaType::class, $pagina);
@@ -170,6 +179,7 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
+                    'carpetas'=>$carpetas,
                 ]);
             }
 
@@ -180,6 +190,7 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
+                    'carpetas'=>$carpetas,
                 ]);
             }
 
@@ -225,6 +236,7 @@ class PaginaController extends BaseController
             'sitio' => $this->sitio,
             'form' => $form->createView(),
             'menues' => $this->menues,
+            'carpetas'=>$carpetas,
         ]);
     }
 
@@ -235,10 +247,13 @@ class PaginaController extends BaseController
         if (!$pagina) {
             throw $this->createNotFoundException('La página no existe');
         }
+        
+
         return $this->renderWithMenu('pagina/show.html.twig', [
             'sitio' => $this->sitio,
             'pagina' => $pagina,
             'menues' => $this->menues,
+            
         ]);
     }
 }

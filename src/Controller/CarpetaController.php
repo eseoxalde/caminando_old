@@ -41,6 +41,7 @@ class CarpetaController extends BaseController
         $this->directoriesPath = $params->get('directories_path');
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'carpeta_index', methods: ['GET'])]
     public function index(CarpetaRepository $carpetaRepository): Response
     {
@@ -53,6 +54,7 @@ class CarpetaController extends BaseController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'carpeta_new', methods: ['GET', 'POST'])]
     public function new(Request $request,CarpetaRepository $carpetaRepository): Response
     {
@@ -83,6 +85,7 @@ class CarpetaController extends BaseController
             'menues' => $this->menues,
         ]);
     }
+
 
     #[Route('/{id}', name: 'carpeta_show', methods: ['GET', 'POST'])]
     public function show(Request $request, Carpeta $carpeta): Response
@@ -125,6 +128,7 @@ class CarpetaController extends BaseController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'carpeta_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Carpeta $carpeta): Response
     {
@@ -168,6 +172,7 @@ class CarpetaController extends BaseController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/delete/{id}', name: 'carpeta_delete', methods: ['POST'])]
     public function delete(Request $request, Carpeta $carpeta, CsrfTokenManagerInterface $csrfTokenManager): Response
     {

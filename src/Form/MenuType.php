@@ -24,7 +24,7 @@ class MenuType extends AbstractType
                 ]            ])
             ->add('nombre', TextType::class, [
                 'label' => 'Nombre para la barra de navegación',
-                'disabled' => true,
+                
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',

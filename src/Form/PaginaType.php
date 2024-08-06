@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Pagina;
+use App\Entity\Carpeta;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +22,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use App\Repository\CarpetaRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
 class PaginaType extends AbstractType
@@ -104,16 +107,11 @@ class PaginaType extends AbstractType
                 'required' => false,
                 'attr' => ['placeholder' => 'Escribe tu mensaje aquí', 'rows' => 6]
             ])
-            ->add('carpeta', ChoiceType::class, [
-                'label' => 'Carpeta de Imágenes',
-                'choices' => $choices,
-                'required' => false,
+            ->add('carpeta', EntityType::class, [
+                'class' => Carpeta::class,
+                'choice_label' => 'nombre',
                 'placeholder' => 'Seleccione una carpeta de imágenes',
-            ])
-            ->add('nuevaCarpeta', TextType::class, [
-                'mapped' => false,
                 'required' => false,
-                'label' => 'Crear nueva carpeta'
             ]);
     }
 

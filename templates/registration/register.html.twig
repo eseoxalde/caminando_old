@@ -9,20 +9,28 @@
         
         {{ form_errors(registrationForm) }}
         {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email, {label: 'Correo electrónico',attr: {class: 'form-control'}}) }}
+        {{ form_row(registrationForm.email, {
+            label: 'Correo electrónico',
+            attr: { class: 'form-control' }
+        }) }}
         {{ form_row(registrationForm.plainPassword, {
-                                    label: 'Contraseña', attr: {class: 'form-control'}}) }}
-<div style="display: flex; align-items: center;">
-    {{ form_widget(registrationForm.agreeTerms, {attr: {class: 'form-check-input'}}) }}
-    {{ form_label(registrationForm.agreeTerms, 'Acepto los términos y condiciones', {attr: {style: 'margin-left: 10px;'}}) }}
-</div>
-        <button type="submit" class="btn">Registrarse</button>
+            label: 'Contraseña',
+            attr: { class: 'form-control' }
+        }) }}
+        <div class="form-check">
+            {{ form_widget(registrationForm.agreeTerms, {
+                attr: { class: 'form-check-input' }
+            }) }}
+            {{ form_label(registrationForm.agreeTerms, 'Acepto los términos y condiciones', {
+                attr: { class: 'form-check-label' }
+            }) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarse</button>
         {{ form_end(registrationForm) }}
     </div>
     <div class="col-md-6">
-            <img src="{{ asset('img/index/logo.jpg')}}" alt="logo de Caminando sobre gliptodontes y tigres diente de sable"></a>   
+        <img src="{{ asset('img/index/logo.jpg') }}" alt="logo de Caminando sobre gliptodontes y tigres diente de sable">   
     </div>
 </article>
 
 {% endblock %}
-

@@ -5,7 +5,7 @@
 <article class="row">
     <div class="col-md-6">
             {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('pagina_edit', {'ruta':pagina.ruta }) }}" class="btn btn-primary d-block mt-2">
+            <a href="{{ path('pagina_edit', {'ruta':pagina.ruta }) }}" class="btn btn-warning d-block mt-2">
                 Editar esta página
             </a>
         {% endif %}

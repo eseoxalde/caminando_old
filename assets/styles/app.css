@@ -172,7 +172,19 @@ header i {
     padding: 16px;
 }
 
+.form-container {
+    height: 800px; 
+}
 
+.form-container iframe {
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-item img {
+    max-height: 500px; 
+    object-fit: cover; 
+}
 
 footer {
     background-color: #e48c3c;
