@@ -22,16 +22,36 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.tiny.cloud/1/6xiusy06jfjrkc2re5d4akmmz7tydwl37w14y19p4w0vqgpn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/6xiusy06jfjrkc2re5d4akmmz7tydwl37w14y19p4w0vqgpn/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/6xiusy06jfjrkc2re5d4akmmz7tydwl37w14y19p4w0vqgpn/tinymce/6/langs/es.js" referrerpolicy="origin"></script>
 
-    <!-- Scripts comunes -->
-    <script>
-        tinymce.init({
-            selector: '.tinymce',
-            menubar: false,
-            plugins: 'link image code',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright'
-        });
+<script>
+tinymce.init({
+  selector: 'textarea.tinymce',
+  plugins: 'link image imagetools',
+  imagetools_toolbar: "rotateleft rotateright | flipv fliph | editimage imageoptions",
+  toolbar1: 'addlink | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | image',
+  language: 'es', 
+
+  file_picker_callback: function(callback, value, meta) {
+    if (meta.filetype === 'image') {
+      let input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+      input.addEventListener('change', function() {
+        let file = this.files[0];
+        if (file) {
+          let reader = new FileReader();
+          reader.onload = function() {
+            callback(reader.result, { title: file.name });
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      input.click();
+    }
+  }
+});
 
         function previewImage(input, previewId) {
     if (input.files && input.files[0]) {
@@ -55,34 +75,39 @@ function toggleContentFields() {
     const imageFields = document.getElementById('imageFields');
     const videoFields = document.getElementById('videoFields');
     const carrusellFields = document.getElementById('carrusellFields');
+    const textFields = document.getElementById('textFields');
+    const galeriaFields = document.getElementById('galeriaFields');
+    const conditionalFields = document.getElementById('conditionalFields');
+    const carpetaLabel = document.querySelector('#carpetaLabel');
+    const carpetaField = document.querySelector('select[name="pagina[carpeta]"]');
 
-    if (!imageFields || !videoFields || !carrusellFields) {
+
+    if (!imageFields || !videoFields || !textFields || !conditionalFields || !carpetaLabel || !carpetaField) {
         return;
     }
 
-    if (contentType === 'imagen') {
-        imageFields.style.display = 'block';
-        videoFields.style.display = 'none';
-        carrusellFields.style.display = 'none';
-    } else if (contentType === 'video') {
-        imageFields.style.display = 'none';
-        videoFields.style.display = 'block';
-        carrusellFields.style.display = 'none';
-    } else if (contentType === 'carrusel') {
-        imageFields.style.display = 'none';
-        videoFields.style.display = 'none';
-        carrusellFields.style.display = 'block';
+    if (contentType === 'carrusel' || contentType === 'galeria') {
+        conditionalFields.style.display = 'block';
+        carpetaLabel.style.display = 'block';
+        carpetaField.style.display = 'block';
     } else {
-        imageFields.style.display = 'none';
-        videoFields.style.display = 'none';
-        carrusellFields.style.display = 'none';
+        conditionalFields.style.display = 'none';
+        carpetaLabel.style.display = 'none';
+        carpetaField.style.display = 'none';
     }
-}
 
+    imageFields.style.display = (contentType === 'imagen') ? 'block' : 'none';
+    videoFields.style.display = (contentType === 'video') ? 'block' : 'none';
+    textFields.style.display = (contentType === 'textoLink') ? 'block' : 'none';
+    galeriaFields.style.display = (contentType === 'galeria') ? 'block' : 'none';
+    carrusellFields.style.display = (contentType === 'carrusel') ? 'block' : 'none';
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     toggleContentFields();
 });
+
+
 
 document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener('change', toggleContentFields);
     </script>
@@ -191,8 +216,15 @@ document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener(
                             <li><a href="{{ sitio.facebook }}" title="facebook"><i class="fa-brands fa-square-facebook"></i></a></li>
                         {% endif %}
                         {% if sitio.twitter is not null %}
-                            <li><a href="{{ sitio.twitter }}" title="X"><i class="fa-brands fa-twitter"></i></a></li>
+                            <li><a href="{{ sitio.twitter }}" title="X"><i class="fa-brands fa-x-twitter"></i></a></li>
                         {% endif %}
+                        {% if sitio.youtube is not null %}
+                            <li><a href="{{ sitio.youtube }}" title="Youtube"><i class="fa-brands fa-youtube"></i></a></li>
+                        {% endif %}
+                        {% if sitio.tiktok is not null %}
+                            <li><a href="{{ sitio.tiktok }}" title="Tiktok"><i class="fa-brands fa-tiktok"></i></a></li>
+                        {% endif %}
+
                     </ul>
                 </nav>
             </div>

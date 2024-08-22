@@ -46,6 +46,9 @@ class Pagina
     #[ORM\ManyToOne(targetEntity: Carpeta::class, inversedBy: 'paginas')]
     private ?Carpeta $carpeta = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $textoConLinks = null;
+
     public function __construct()
     { }
 
@@ -177,6 +180,18 @@ class Pagina
     public function setCarpeta(?Carpeta $carpeta): static
     {
         $this->carpeta = $carpeta;
+
+        return $this;
+    }
+
+    public function getTextoConLinks(): ?string
+    {
+        return $this->textoConLinks;
+    }
+
+    public function setTextoConLinks(?string $textoConLinks): static
+    {
+        $this->textoConLinks = $textoConLinks;
 
         return $this;
     }

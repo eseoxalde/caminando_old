@@ -34,6 +34,12 @@ class Sitio
     private ?string $twitter = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $youtube = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tiktok = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
     public function getId(): ?int
@@ -128,6 +134,30 @@ class Sitio
     public function setTwitter(?string $twitter): static
     {
         $this->twitter = $twitter;
+
+        return $this;
+    }
+    
+    public function getYoutube(): ?string
+    {
+        return $this->youtube;
+    }
+
+    public function setYoutube(?string $youtube): static
+    {
+        $this->youtube = $youtube;
+
+        return $this;
+    }
+
+    public function getTiktok(): ?string
+    {
+        return $this->tiktok;
+    }
+
+    public function setTiktok(?string $tiktok): static
+    {
+        $this->tiktok = $tiktok;
 
         return $this;
     }

@@ -75,6 +75,8 @@ class PaginaType extends AbstractType
                     'Video' => 'video',
                     'Una imagen única' => 'imagen',
                     'Carrusel de imagenes' => 'carrusel',
+                    'Texto, Links' => 'textoLink',
+                    'Galería de imagenes' => 'galeria',
                 ],
                 'expanded' => false, 
                 'multiple' => false, 
@@ -105,13 +107,18 @@ class PaginaType extends AbstractType
             ->add('ruta_video', TextareaType::class, [
                 'label' => 'Ruta del video',
                 'required' => false,
-                'attr' => ['placeholder' => 'Escribe tu mensaje aquí', 'rows' => 6]
+                'attr' => ['placeholder' => 'Escribe la URL del video aquí', 'rows' => 6],
             ])
             ->add('carpeta', EntityType::class, [
                 'class' => Carpeta::class,
                 'choice_label' => 'nombre',
                 'placeholder' => 'Seleccione una carpeta de imágenes',
                 'required' => false,
+            ])
+            ->add('textoConLinks', TextareaType::class, [
+                'label' => 'Texto',
+                'required' => false,
+                'attr' => ['class' => 'form-control tinymce']
             ]);
     }
 
