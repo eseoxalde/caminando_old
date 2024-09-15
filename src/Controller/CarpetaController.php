@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Carpeta;
 use App\Entity\Imagen;
+use App\Entity\Pagina;
 use App\Form\CarpetaType;
 use App\Form\ImagenType;
 use App\Repository\CarpetaRepository;
@@ -180,20 +181,27 @@ class CarpetaController extends BaseController
         if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete' . $carpeta->getId(), $csrfToken))) {
             throw $this->createAccessDeniedException('Token CSRF no válido');
         }
-
+    
         $carpetaPath = $this->directoriesPath . '/' . $carpeta->getNombre();
-
+    
         if (is_dir($carpetaPath)) {
             $this->deleteDirectory($carpetaPath);
         }
-
+    
+        foreach ($carpeta->getPaginas() as $pagina) {
+            $pagina->setContenidoTipo('vacio');
+            $pagina->setCarpeta(null);  
+            $this->entityManager->persist($pagina);
+        }
         $this->entityManager->remove($carpeta);
         $this->entityManager->flush();
-
+    
         $this->addFlash('success', 'Carpeta eliminada correctamente.');
-
+    
         return $this->redirectToRoute('carpeta_index');
     }
+    
+
 
     private function deleteDirectory($dir)
     {

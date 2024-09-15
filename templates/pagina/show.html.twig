@@ -5,23 +5,29 @@
 <article class="row">
     {% if pagina.contenidoTipo == 'galeria' %}
         <!-- Galeria de imagenes en pantalla completa -->
-        {% if is_granted('ROLE_ADMIN') %}
+         <div class="col-md-6">
+            {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('pagina_edit', {'ruta':pagina.ruta }) }}" class="btn btn-warning d-block m-2">
                     Editar esta página
                 </a>
             {% endif %}
-        <div class="gallery">
-            {% for imagen in pagina.carpeta.imagenes %}
-                <div class="gallery-item">
-                    <img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}">
-                    <div class="gallery-text">{{ imagen.altText }}</div>
-                </div>
-            {% endfor %}
         </div>
-
-
+        <div class="col-md-12">
+            <h1>{{ pagina.titulo }} </h1>
+            <div class="separador"> </div>
+            <h2>{{ pagina.subtitulo }}</h2>
+            {{ pagina.texto | raw }} 
+            <div class="gallery">
+                {% for imagen in pagina.carpeta.imagenes %}
+                    <div class="gallery-item text-wrap">
+                        <img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}">
+                        <div class="gallery-text">{{ imagen.altText }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     {% else %}
-        <!-- Diseño habitual para otros tipos de contenido -->
+        <!-- Diseño dos columnas para otros tipos de contenido -->
         <div class="col-md-6">
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('pagina_edit', {'ruta':pagina.ruta }) }}" class="btn btn-warning d-block mt-2">
@@ -41,7 +47,6 @@
                 </div>
             {% elseif pagina.contenidoTipo == 'textoLink' and pagina.textoConLinks is not empty %}
                 <div>
-                    <h2>Hola</h2>
                     {{ pagina.textoConLinks | raw }}
                 </div>
             {% elseif pagina.contenidoTipo == 'video' and pagina.RutaVideo is not empty %}

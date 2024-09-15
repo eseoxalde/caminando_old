@@ -53,7 +53,7 @@ tinymce.init({
   }
 });
 
-        function previewImage(input, previewId) {
+function previewImage(input, previewId) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -65,53 +65,11 @@ tinymce.init({
     }
 }
 
-function toggleContentFields() {
-    const contentTypeSelect = document.querySelector('select[name="pagina[contenidoTipo]"]');
-    if (!contentTypeSelect) {
-        return;
-    }
 
-    const contentType = contentTypeSelect.value;
-    const imageFields = document.getElementById('imageFields');
-    const videoFields = document.getElementById('videoFields');
-    const carrusellFields = document.getElementById('carrusellFields');
-    const textFields = document.getElementById('textFields');
-    const galeriaFields = document.getElementById('galeriaFields');
-    const conditionalFields = document.getElementById('conditionalFields');
-    const carpetaLabel = document.querySelector('#carpetaLabel');
-    const carpetaField = document.querySelector('select[name="pagina[carpeta]"]');
+</script>
 
-
-    if (!imageFields || !videoFields || !textFields || !conditionalFields || !carpetaLabel || !carpetaField) {
-        return;
-    }
-
-    if (contentType === 'carrusel' || contentType === 'galeria') {
-        conditionalFields.style.display = 'block';
-        carpetaLabel.style.display = 'block';
-        carpetaField.style.display = 'block';
-    } else {
-        conditionalFields.style.display = 'none';
-        carpetaLabel.style.display = 'none';
-        carpetaField.style.display = 'none';
-    }
-
-    imageFields.style.display = (contentType === 'imagen') ? 'block' : 'none';
-    videoFields.style.display = (contentType === 'video') ? 'block' : 'none';
-    textFields.style.display = (contentType === 'textoLink') ? 'block' : 'none';
-    galeriaFields.style.display = (contentType === 'galeria') ? 'block' : 'none';
-    carrusellFields.style.display = (contentType === 'carrusel') ? 'block' : 'none';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    toggleContentFields();
-});
-
-
-
-document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener('change', toggleContentFields);
-    </script>
 </head>
+
 <body>
 <header>
     <div class="logo">
@@ -197,7 +155,60 @@ document.querySelector('select[name="pagina[contenidoTipo]"]').addEventListener(
             {% endblock %}
         </section>
     </main>
+<script>
+function toggleContentFields() {
+    const contentTypeSelect = document.querySelector('select[name="pagina[contenidoTipo]"]');
+    if (!contentTypeSelect) {
+        return;
+    }
+    const contentType = contentTypeSelect.value;
 
+    const imageFields = document.getElementById('imageFields');
+    const videoFields = document.getElementById('videoFields');
+    const carrusellFields = document.getElementById('carrusellFields');
+    const textFields = document.getElementById('textFields');
+    const galeriaFields = document.getElementById('galeriaFields');
+    const conditionalFields = document.getElementById('conditionalFields');
+    const carpetaLabel = document.querySelector('#carpetaLabel');
+    const carpetaField = document.querySelector('select[name="pagina[carpeta]"]');
+
+    if (conditionalFields && carpetaLabel && carpetaField) {
+        if (contentType === 'carrusel' || contentType === 'galeria') {
+            conditionalFields.style.display = 'block';
+            carpetaLabel.style.display = 'block';
+            carpetaField.style.display = 'block';
+        } else {
+            conditionalFields.style.display = 'none';
+            carpetaLabel.style.display = 'none';
+            carpetaField.style.display = 'none';
+        }
+    }
+    if (imageFields) {
+        imageFields.style.display = (contentType === 'imagen') ? 'block' : 'none';
+    }
+    if (videoFields) {
+        videoFields.style.display = (contentType === 'video') ? 'block' : 'none';
+    }
+    if (textFields) {
+        textFields.style.display = (contentType === 'textoLink') ? 'block' : 'none';
+    }
+    if (galeriaFields) {
+        galeriaFields.style.display = (contentType === 'galeria') ? 'block' : 'none';
+    }
+    if (carrusellFields) {
+        carrusellFields.style.display = (contentType === 'carrusel') ? 'block' : 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    toggleContentFields();
+    const contentTypeSelect = document.querySelector('select[name="pagina[contenidoTipo]"]');
+    if (contentTypeSelect) {
+        contentTypeSelect.addEventListener('change', toggleContentFields);
+    }
+});
+
+</script>
     <footer class="container-fluid">
         <div class="row">
             <div class="col-sm-8">

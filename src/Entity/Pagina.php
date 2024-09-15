@@ -171,16 +171,15 @@ class Pagina
 
         return $this;
     }
-
+    
     public function getCarpeta(): ?Carpeta
     {
         return $this->carpeta;
     }
-
-    public function setCarpeta(?Carpeta $carpeta): static
+    
+    public function setCarpeta(?Carpeta $carpeta): self
     {
         $this->carpeta = $carpeta;
-
         return $this;
     }
 

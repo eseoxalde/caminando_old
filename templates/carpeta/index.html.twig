@@ -24,9 +24,15 @@
                     <td>{{ carpeta.nombre }}</td>
                     <td>{{ carpeta.descripcion }}</td>
                     <td>{{ carpeta.imagenes|length }}</td>
-                    <td>{{ carpeta.pagina ? carpeta.pagina.titulo : 'Sin página' }}</td>
                     <td>
-                        <a href="{{ path('carpeta_show', {'id': carpeta.id}) }}" class="btn btn-info">Ver</a>
+                                {% for pagina in carpeta.paginas %}
+                    {{ pagina.titulo }}{% if not loop.last %}, {% endif %}
+                {% else %}
+                    No asignada
+                {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('carpeta_show', {'id': carpeta.id}) }}" class="btn btn-info">Ver Imagenes</a>
                         <a href="{{ path('carpeta_edit', {'id': carpeta.id}) }}" class="btn btn-warning">Cambiar nombre</a>
                         <form action="{{ path('carpeta_delete', {'id': carpeta.id}) }}" method="post" style="display:inline;">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ carpeta.id) }}">

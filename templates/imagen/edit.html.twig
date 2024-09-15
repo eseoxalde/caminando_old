@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Editar Texto Alternativo</h1>
+
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.altText, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.altText, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button class="btn btn-primary">Guardar</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('carpeta_show', {'id': imagen.carpeta.id}) }}" class="btn btn-secondary">Volver</a>
+{% endblock %}

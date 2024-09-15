@@ -152,10 +152,11 @@ header i {
 .gallery-item {
     display: flex;
     align-items: center;
-    max-width: calc(50% - 10px);
+    min-width: calc(45% - 10px);
     margin-bottom: 10px;
     box-sizing: border-box;
     margin: 15px;
+    border: 1px solid grey;
 }
 
 .gallery-item img {
@@ -163,6 +164,7 @@ header i {
     max-height: 200px;
     object-fit: cover;
     display: block;
+    
 }
 
 .gallery-text {
@@ -172,8 +174,6 @@ header i {
     max-height: 200px; 
     display: flex;
     align-items: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 
@@ -302,4 +302,10 @@ footer .btn {
         width: 100%;
         margin: 0 auto;
     }
+
+.gallery-item {
+
+    max-width: calc(45% - 10px);
+
+}
 }

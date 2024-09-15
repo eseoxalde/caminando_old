@@ -12,6 +12,8 @@ use App\Entity\Menu;
 use App\Repository\SitioRepository;
 use App\Repository\MenuRepository;
 use App\Repository\ImagenRepository;
+use App\Entity\Imagen;
+
 
 #[Route('/imagen')]
 class ImagenController extends BaseController
@@ -42,11 +44,11 @@ class ImagenController extends BaseController
     }
 
     #[Route('/{id}/delete', name: 'imagen_delete', methods: ['POST'])]
-    public function delete(Request $request, Imagen $imagen, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Imagen $imagen): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$imagen->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($imagen);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete' . $imagen->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($imagen);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('carpeta_show', ['id' => $imagen->getCarpeta()->getId()]);
@@ -59,5 +61,30 @@ class ImagenController extends BaseController
             ->setMethod('POST')
             ->getForm()
         ;
+    }
+
+    #[Route('/{id}/edit', name: 'imagen_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Imagen $imagen): Response
+    {
+        $form = $this->createFormBuilder($imagen)
+            ->add('altText', null, [
+                'label' => 'Texto Alternativo',
+                'attr' => ['class' => 'form-control']
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+            return $this->redirectToRoute('carpeta_show', ['id' => $imagen->getCarpeta()->getId()]);
+        }
+
+        return $this->render('imagen/edit.html.twig', [
+            'form' => $form->createView(),
+            'imagen' => $imagen,
+            'sitio' => $this->sitio,
+            'menues' => $this->menues,
+        ]);
     }
 }

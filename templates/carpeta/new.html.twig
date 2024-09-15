@@ -38,7 +38,13 @@
             {% for carpeta in carpetas %}
                 <tr>
                     <td>{{ carpeta.nombre }}</td>
-                   <td>{{ carpeta.pagina ? carpeta.pagina.titulo : 'Sin página' }}</td>
+                   <td>                  <td>
+                                {% for pagina in carpeta.paginas %}
+                    {{ pagina.titulo }}{% if not loop.last %}, {% endif %}
+                {% else %}
+                    No asignada
+                {% endfor %}
+                    </td></td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -69,14 +69,14 @@ class PaginaController extends BaseController
     }
 
     #[Route('/new', name: 'pagina_new')]
-    public function new(Request $request, PaginaRepository $paginaRepository, CarpetaRepository $carpetaRepository,): Response
+    public function new(Request $request, PaginaRepository $paginaRepository, CarpetaRepository $carpetaRepository): Response
     {
         $pagina = new Pagina();
         $form = $this->createForm(PaginaType::class, $pagina);
         $form->handleRequest($request);
-
+    
         $carpetas = $carpetaRepository->findAll();
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $existingPage = $paginaRepository->findOneBy(['ruta' => $pagina->getRuta()]);
             if ($existingPage) {
@@ -85,10 +85,10 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
-                    'pagina'=>$pagina,
+                    'pagina' => $pagina,
                 ]);
             }
-
+    
             $fotoFile = $form['ruta_imagen_unica']->getData();
             if ($fotoFile) {
                 $newFilename = uniqid() . '.' . $fotoFile->guessExtension();
@@ -102,33 +102,43 @@ class PaginaController extends BaseController
                     $this->addFlash('error', 'No se pudo subir la imagen.');
                 }
             }
-
+    
             $this->entityManager->persist($pagina);
             $this->entityManager->flush();
-
+    
             $menu = new Menu();
             $menu->setRuta($pagina->getRuta());
             $menu->setNombre($pagina->getRuta());
             $menu->setVisible(true);
             $menu->setPosicion(0);
-
+    
             $pagina->setMenu($menu);
-
+    
             $this->entityManager->persist($menu);
             $this->entityManager->flush();
-
+    
+            if (in_array($pagina->getContenidoTipo(), ['galeria', 'carrusel'])) {
+                foreach ($carpetas as $carpeta) {
+                    $carpeta->addPagina($pagina);
+                    $this->entityManager->persist($carpeta);
+                }
+                $this->entityManager->flush();
+            }
+    
             $this->addFlash('success', 'Página creada correctamente.');
             return $this->redirectToRoute('pagina_index');
         }
-
+    
         return $this->renderWithMenu('pagina/new.html.twig', [
             'sitio' => $this->sitio,
             'form' => $form->createView(),
             'menues' => $this->menues,
             'carpetas' => $carpetas,
-            'pagina'=>$pagina,
+            'pagina' => $pagina,
         ]);
     }
+    
+
 
     #[Route('/delete/{ruta}', name: 'pagina_delete')]
     public function delete(string $ruta, PaginaRepository $paginaRepository, MenuRepository $menuRepository): Response
@@ -158,7 +168,7 @@ class PaginaController extends BaseController
     }
 
     #[Route('/edit/{ruta}', name: 'pagina_edit')]
-    public function edit(string $ruta,  CarpetaRepository $carpetaRepository, PaginaRepository $paginaRepository, MenuRepository $menuRepository, Request $request): Response
+    public function edit(string $ruta, CarpetaRepository $carpetaRepository, PaginaRepository $paginaRepository, MenuRepository $menuRepository, Request $request): Response
     {
         $pagina = $paginaRepository->findOneBy(['ruta' => $ruta]);
         if (!$pagina) {
@@ -179,7 +189,7 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
-                    'carpetas'=>$carpetas,
+                    'carpetas' => $carpetas,
                 ]);
             }
 
@@ -190,7 +200,7 @@ class PaginaController extends BaseController
                     'sitio' => $this->sitio,
                     'form' => $form->createView(),
                     'menues' => $this->menues,
-                    'carpetas'=>$carpetas,
+                    'carpetas' => $carpetas,
                 ]);
             }
 
@@ -227,6 +237,15 @@ class PaginaController extends BaseController
 
             $this->entityManager->persist($pagina);
             $this->entityManager->flush();
+
+            if (in_array($pagina->getContenidoTipo(), ['galeria', 'carrusel'])) {
+                foreach ($carpetas as $carpeta) {
+                    $carpeta->addPagina($pagina);
+                    $this->entityManager->persist($carpeta);
+                }
+                $this->entityManager->flush();
+            }
+
             $this->addFlash('success', 'Página actualizada correctamente.');
             return $this->redirectToRoute('pagina_show', ['ruta' => $pagina->getRuta()]);
         }
@@ -236,9 +255,11 @@ class PaginaController extends BaseController
             'sitio' => $this->sitio,
             'form' => $form->createView(),
             'menues' => $this->menues,
-            'carpetas'=>$carpetas,
+            'carpetas' => $carpetas,
         ]);
     }
+
+
 
     #[Route('/{ruta}', name: 'pagina_show')]
     public function show(string $ruta, PaginaRepository $paginaRepository, MenuRepository $menuRepository): Response

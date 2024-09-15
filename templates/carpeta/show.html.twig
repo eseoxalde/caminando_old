@@ -34,7 +34,13 @@
                     <tr>
                         <td><img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}" style="max-height: 100px;"></td>
                         <td>{{ imagen.altText }}</td>
-                        <td><a href="" class="btn btn-danger">Borrar</a></td>
+                        <td>
+                            <a href="{{ path('imagen_edit', {'id': imagen.id}) }}" class="btn btn-info">Editar texto</a>
+                            <form method="post" action="{{ path('imagen_delete', {'id': imagen.id}) }}" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ imagen.id) }}">
+                                <button class="btn btn-danger">Borrar</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

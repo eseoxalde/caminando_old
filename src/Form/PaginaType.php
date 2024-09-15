@@ -79,8 +79,7 @@ class PaginaType extends AbstractType
                     'Galería de imagenes' => 'galeria',
                 ],
                 'expanded' => false, 
-                'multiple' => false, 
-                'data' => 'vacio', 
+                'multiple' => false,  
             ])
             ->add('ruta_imagen_unica', FileType::class, [
                 'label' => 'Imagen',

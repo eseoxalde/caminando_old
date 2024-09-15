@@ -24,13 +24,13 @@ class Carpeta
     #[ORM\OneToMany(mappedBy: 'carpeta', targetEntity: Imagen::class, cascade: ['persist', 'remove'])]
     private Collection $imagenes;
 
-    #[ORM\ManyToOne(targetEntity: Pagina::class, inversedBy: 'carpetas')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Pagina $pagina = null;
+    #[ORM\OneToMany(mappedBy: 'carpeta', targetEntity: Pagina::class)]
+    private Collection $paginas;
 
     public function __construct()
     {
         $this->imagenes = new ArrayCollection();
+        $this->paginas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,14 +62,29 @@ class Carpeta
         return $this;
     }
 
-    public function getPagina(): ?Pagina
+    public function getPaginas(): Collection
     {
-        return $this->pagina;
+        return $this->paginas;
     }
 
-    public function setPagina(?Pagina $pagina): static
+    public function addPagina(Pagina $pagina): self
     {
-        $this->pagina = $pagina;
+        if (!$this->paginas->contains($pagina)) {
+            $this->paginas[] = $pagina;
+            $pagina->setCarpeta($this);
+        }
+
+        return $this;
+    }
+
+    public function removePagina(Pagina $pagina): self
+    {
+        if ($this->paginas->removeElement($pagina)) {
+            // Solo se elimina la relación bidireccional si la carpeta ya no está asociada a la página
+            if ($pagina->getCarpeta() === $this) {
+                $pagina->setCarpeta(null);
+            }
+        }
 
         return $this;
     }
