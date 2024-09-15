@@ -66,6 +66,9 @@
                         {% for imagen in pagina.carpeta.imagenes %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
                                 <img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" class="d-block w-100" alt="{{ imagen.altText }}">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <p>{{ imagen.altText }}</p>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>

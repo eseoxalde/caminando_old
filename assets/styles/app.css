@@ -219,9 +219,23 @@ header i {
     width: 100%;
 }
 
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6f6f6fda;
+    height: 500px;
+}
+
 .carousel-item img {
-    max-height: 500px; 
-    object-fit: cover; 
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+.carousel-item p {
+    background-color: #6f6f6fda;
+    color:antiquewhite
 }
 
 footer {
