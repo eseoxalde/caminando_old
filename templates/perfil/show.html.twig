@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user %}
+        <h1 class="mt-3"> 
+        {% if user.username %}
+            {{ user.username }}
+        {% else %} 
+            {{ user.email  }}
+        {% endif %}
+    </h1>
+    <div class="separador"> </div>
+    
+    <article class="row justify-content-center">
+        <div class="col-md-4 text-center ml-3">
+            {% if user.foto %}
+                <img src="{{ asset(user.foto) }}" alt="Foto de perfil" class="img-fluid rounded-circle" width="150" height="150">
+            {% else %}
+                <img src="{{ asset('img/icons8-huella-de-oso-26.png') }}" alt="Foto de perfil predeterminada" class="img-fluid rounded-circle" width="150" height="150">
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 text-left">
+            <div class="card">
+                <div class="container">
+                    <p><strong>Email:</strong> {{ user.email}}</p>
+                    <p><strong>Nombre:</strong> {{ user.nombre }}</p>
+                    <p><strong>Apellido:</strong> {{ user.apellido }}</p>
+                    <p><strong>Fecha de nacimiento:</strong> {{user.fechaNacimiento|date('d/m/Y') }}</p>
+                </div>
+            </div>     
+        </div>
+
+    </article>
+{% endif %}
+{% endblock %}

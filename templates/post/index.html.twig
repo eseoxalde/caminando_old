@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1 class="mt-3">{{foro.nombre}}</span></h1>
+<p>{{foro.descripcion}}</span></p>
+<div class="separador"></div>
+
+{# Mostrar categorías #}
+{% if categories is not empty %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('categoria_new') }}" class="btn btn-primary mb-3">
+            Crear nueva categoría
+        </a>
+    {% endif %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Debates</th>
+                <th>Mensajes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categories %}
+                <tr>
+                    <td>
+                        <a href="{{ path('categoria_show', { id: categoria.id }) }}">{{ categoria.name }}</a>
+                    <br>
+                        <span class="catDes">{{ categoria.description }}</span></td>
+                    <td>{{ categoria.postCount }}</td>
+                    <td>{{ categoria.messageCount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay categorías disponibles.</p>
+{% endif %}
+
+
+    <h2>Últimos posts</h2>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{ path('post_new') }}" class="btn btn-primary mb-3">
+            Crear nuevo post
+        </a>
+    {% endif %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Debate</th>
+            <th>Participantes</th>
+            <th>Respuestas</th>
+            <th>Última Publicación</th>
+        </tr>
+    </thead>
+    {% if importantPosts is not empty or latestPosts is not empty %}
+    <tbody>
+        {% for post in importantPosts %}
+            <tr class="table-warning">
+                <td>
+                    <i class="fa-solid fa-thumbtack"></i> 
+                    <span class="bi bi-pin-angle-fill" title="Post importante"></span>
+                    <a href="{{ path('post_show', { id: post.id }) }}"> {{ post.title }}</a>
+                    <br>
+                    <span class="catDes">
+                        Iniciado por: <strong>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('user_profile', { id: post.author.id }) }}">{{ post.author.username ? post.author.username : post.author.email }}</a>
+                        {% else %}
+                            {{ post.author.username ? post.author.username : post.author.email }}
+                         {% endif %} </strong>
+                        en: <a href="{{ path('categoria_show', { id: post.categoria.id }) }}">{{ post.categoria.name }}</a>
+                    </span>
+                </td>
+                <td>{{ post.participantsCount }}</td>
+                <td>{{ post.comentariosCount }}</td>
+                <td>
+                    {% if post.lastcomentario is not null %}
+                        <a href="{{ path('comentario_show', { id: post.lastcomentario.id }) }}">{{ post.lastcomentario.createdAt|date('d-m-Y') }}</a>
+                    {% else %}
+                        No hay comentarios
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+        {% for post in latestPosts %}
+            <tr>
+                <td>
+                    <a href="{{ path('post_show', { id: post.id }) }}">{{ post.title }}</a>
+                    <br>
+                    <span class="catDes">
+                        Iniciado por: <strong>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('user_profile', { id: post.author.id }) }}">{{ post.author.username ? post.author.username : post.author.email }}</a>
+                        {% else %}
+                            {{ post.author.username ? post.author.username : post.author.email }}
+                         {% endif %} </strong>
+                        en: <a href="{{ path('categoria_show', { id: post.categoria.id }) }}">{{ post.categoria.name }}</a>
+                    </span>
+                </td>
+                <td>{{ post.participantsCount }}</td>
+                <td>{{ post.comentariosCount }}</td>
+                <td>
+                    {% if post.lastcomentario is not null %}
+                        <a href="{{ path('comentario_show', { id: post.lastcomentario.id }) }}">{{ post.lastcomentario.createdAt|date('Y-m-d H:i') }}</a>
+                    {% else %}
+                        No hay comentarios
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    {% else %}
+        <tbody>
+            <tr>
+                <td colspan="6">No hay posts disponibles.</td>
+            </tr>
+        </tbody>
+    {% endif %}
+</table>
+
+
+{% endblock %}

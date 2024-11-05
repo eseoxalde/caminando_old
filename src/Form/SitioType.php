@@ -58,21 +58,6 @@ class SitioType extends AbstractType
                     ])
                 ],
             ])
-            ->add('instagram', TextType::class, [
-                'label' => 'Instagram',
-                'required' => false,
-                'attr' => ['placeholder' => 'Introduce la dirección del instagram']
-            ])
-            ->add('facebook', TextType::class, [
-                'label' => 'Facebook',
-                'required' => false,
-                'attr' => ['placeholder' => 'Introduce la direccipon del facebook']
-            ])
-            ->add('twitter', TextType::class, [
-                'label' => 'X (ex twitter)',
-                'required' => false,
-                'attr' => ['placeholder' => 'Introduce la dirección del twitter']
-            ])
             ->add('mail', TextType::class, [
                 'label' => 'Correo electrónico',
                 'required' => false,

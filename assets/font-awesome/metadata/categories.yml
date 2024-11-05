@@ -53,7 +53,7 @@ alphabet:
     - k
     - l
     - m
-    - 'n'
+    - "n"
     - o
     - p
     - q
@@ -65,7 +65,7 @@ alphabet:
     - v
     - w
     - x
-    - 'y'
+    - "y"
     - z
   label: Alphabet
 animals:
@@ -615,12 +615,12 @@ communication:
     - blender-phone
     - bluetooth-b
     - bullhorn
-    - comment
-    - comment-dots
-    - comment-medical
-    - comment-slash
-    - comment-sms
-    - comments
+    - comentario
+    - comentario-dots
+    - comentario-medical
+    - comentario-slash
+    - comentario-sms
+    - comentarios
     - ear-listen
     - envelope
     - envelope-circle-check
@@ -1883,8 +1883,8 @@ marketing:
     - bullhorn
     - bullseye
     - chart-simple
-    - comment-dollar
-    - comments-dollar
+    - comentario-dollar
+    - comentarios-dollar
     - envelope-open-text
     - envelopes-bulk
     - filter-circle-dollar
@@ -1988,7 +1988,7 @@ medical-health:
     - circle-radiation
     - clipboard-user
     - clock-rotate-left
-    - comment-medical
+    - comentario-medical
     - crutch
     - disease
     - dna
@@ -2102,8 +2102,8 @@ money:
     - circle-dollar-to-slot
     - coins
     - colon-sign
-    - comment-dollar
-    - comments-dollar
+    - comentario-dollar
+    - comentarios-dollar
     - credit-card
     - cruzeiro-sign
     - dollar-sign
@@ -2239,16 +2239,16 @@ nature:
   label: Nature
 numbers:
   icons:
-    - '0'
-    - '1'
-    - '2'
-    - '3'
-    - '4'
-    - '5'
-    - '6'
-    - '7'
-    - '8'
-    - '9'
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
   label: Numbers
 photos-images:
   icons:
@@ -2482,7 +2482,7 @@ shapes:
     - circle-half-stroke
     - cloud
     - clover
-    - comment
+    - comentario
     - crown
     - cubes-stacked
     - diamond
@@ -2569,7 +2569,7 @@ social:
     - cake-candles
     - camera
     - circle-user
-    - comment
+    - comentario
     - envelope
     - hashtag
     - heart

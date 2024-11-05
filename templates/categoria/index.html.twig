@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Categorías</h1>
+    <div class="separador"> </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categories %}
+                <tr>
+                    <td>
+                    {{ categoria.name }}</td>
+                    <td>{{ categoria.description }}</td>
+                    <td>
+                        <a href="{{ path('categoria_edit', {id: categoria.id}) }}" class="btn btn-primary mb-1">Editar</a>
+                        <a href="{{ path('categoria_delete', {id: categoria.id}) }}" class="btn btn-danger" 
+                           onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No se encontraron categorías.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('categoria_new') }}" class="btn btn-success mb-3">Nueva Categoría</a>
+{% endblock %}

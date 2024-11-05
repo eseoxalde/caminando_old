@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Lista de Posts</h1>
+     <div class="separador"> </div>
+
+    <a href="{{ path('post_new') }}" class="btn btn-primary">Crear Nuevo Post</a>
+    <a href="{{ path('categoria_new') }}" class="btn btn-secondary">Crear Nueva Categoría</a>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>Fecha de Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.categoria.name }}</td>
+                    <td>{{ post.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>
+                        <a href="{{ path('post_show', {id: post.id}) }}" class="btn btn-info">Ver</a>
+                        <a href="{{ path('post_edit', {id: post.id}) }}" class="btn btn-warning">Editar</a>
+                        <form action="{{ path('post_delete', {id: post.id}) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            <button class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No hay posts disponibles.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

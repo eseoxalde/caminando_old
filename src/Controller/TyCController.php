@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SitioRepository;
 use App\Repository\MenuRepository;
 
-class AyudaController extends BaseController
+class TyCController extends BaseController
 {
     private $entityManager;
     private $sitio;
@@ -24,10 +25,10 @@ class AyudaController extends BaseController
         $this->menues = $menuRepository->findVisibleMenus();
     }
 
-    #[Route('/ayuda', name: 'ayuda')]
+    #[Route('/terminos-condiciones', name: 'tyc')]
     public function index(): Response
     {
-        return $this->renderWithMenu('ayuda/ayuda.html.twig', [
+        return $this->renderWithMenu('tyc/index.html.twig', [
             'sitio' => $this->sitio,
             'menues' => $this->menues,
         ]);

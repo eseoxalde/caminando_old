@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Editar Post</h1>
+ <div class="separador"> </div>
+
+    {{ form_start(form) }}
+        <button class="btn btn-primary">Guardar Cambios</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Volver al listado de posts</a>
+
+   
+    {{ form_start(delete_form) }}
+        <button class="btn btn-danger mt-3" onclick="return confirm('¿Estás seguro de que deseas eliminar este post?');">
+            Eliminar Post
+        </button>
+    {{ form_end(delete_form) }}
+{% endblock %}

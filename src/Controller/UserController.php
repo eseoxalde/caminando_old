@@ -16,6 +16,7 @@ use App\Repository\MenuRepository;
 use App\Form\UserType;
 use App\Form\MenuType;
 
+
 #[Route('/usuario')]
 class UserController extends BaseController
 {

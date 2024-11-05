@@ -73,7 +73,17 @@ function previewImage(input, previewId) {
 <body>
 <header>
     <div class="logo">
-        <a href="{{ path('inicio') }}"><img src="{{ sitio.header }}" alt="logo de {{sitio.nombreSitio}}"></a>
+        <a href="{{ path('inicio') }}">
+                {% if sitio.getHeader()  %}
+                    <img src="{{ sitio.header }}" alt="logo de {{sitio.nombreSitio}}">
+                {% else %}
+                    <img src="{{ asset('img/icons8-imagen-48.png') }}" alt="Cambiame">
+                    <p>Header del sitio, debe cmabiarse</p>
+                {% endif %}
+
+
+            
+        </a>
     </div>
     <nav class="navbar navbar-expand-md container-fluid">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,7 +115,7 @@ function previewImage(input, previewId) {
 
                 <!-- Estos items van a aparecer siempre, no pueden ni deben modificarse -->
                 <li class="nav-item">
-                    <a class="nav-link" href="#" title="Foro">Foro</a>
+                    <a class="nav-link" href="{{ path('post_index') }}" title="Foro">Foro</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('contacto') }}" title="Contacto">Contacto</a>
@@ -117,9 +127,12 @@ function previewImage(input, previewId) {
                             {{ app.user.username ? app.user.username : app.user.userIdentifier }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil">Perfil</a>
-                            <a class="dropdown-item" href="#" title="Alfo mas">Algo mas</a>
-                            <a class="dropdown-item" href="{{ path('app_logout') }}" title="Salir">Salir</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil"><i class="fa-solid fa-user-gear"></i> Perfil</a>
+                             {% else %}
+                                <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil"><i class="fa-solid fa-user"></i> Perfil</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{{ path('app_logout') }}" title="Salir"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
                         </div>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
@@ -128,19 +141,22 @@ function previewImage(input, previewId) {
                                 Configuración
                             </a>
                             <div class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <a class="dropdown-item" href="{{ path('ayuda') }}" title="Ayuda">Manual de uso</a>
-                                <a class="dropdown-item" href="{{ path('sitio_edit') }}" title="Configuración general">Configuración general</a>
-                                <a class="dropdown-item" href="{{ path('pagina_index') }}" title="Páginas">Páginas</a>
-                                <a class="dropdown-item" href="{{ path('menu_index') }}" title="Menu">Menu de navegación</a>
-                                <a class="dropdown-item" href="#" title="Galerias de imagenes">Galerias de imagenes</a>
-                                <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios">Usuarios</a>
-                                <a class="dropdown-item" href="{{ path('carpeta_index') }}" title="Carpetas">Carpetas</a>
+                                <a class="dropdown-item" href="{{ path('ayuda') }}" title="Ayuda"><i class="fa-solid fa-circle-question"></i> Manual de uso</a>
+                                <a class="dropdown-item" href="{{ path('sitio_edit') }}" title="Configuración general"><i class="fa-solid fa-gear"></i> Configuración general</a>
+                                <a class="dropdown-item" href="{{ path('pagina_index') }}" title="Páginas"><i class="fa-solid fa-file-lines"></i> Páginas</a>
+                                <a class="dropdown-item" href="{{ path('menu_index') }}" title="Menu"><i class="fa-solid fa-bars"></i> Menu de navegación</a>
+                                <a class="dropdown-item" href="{{ path('carpeta_index') }}" title="Carpetas"><i class="fa-solid fa-folder"></i> Carpetas</a>
+                                <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios"><i class="fa-solid fa-user-group"></i> Usuarios</a>
+                                <a class="dropdown-item" href="{{ path('redes_edit') }}" title="Carpetas"><i class="fa-solid fa-icons"></i> Foro y Redes Sociales</a>
+                                <a class="dropdown-item" href="#" title="Gestión de Temas y Diseño"><i class="fa-solid fa-pen-ruler"></i> Temas y Diseño</a>
+                                <a class="dropdown-item" href="#" title="Optimizacion"><i class="fa-solid fa-list-check"></i> Optimización</a>
+                                <a class="dropdown-item" href="#" title="Estadisticas"><i class="fa-solid fa-chart-line"></i> Análisis y Estadísticas</a>
                             </div>
                         </li>
                     {% endif %}
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('login') }}" title="Ingresar">Ingresar</a>
+                        <a class="nav-link" href="{{ path('login') }}" title="Ingresar"> Ingresar</a>
                     </li>
                 {% endif %}
             </ul>
@@ -149,7 +165,7 @@ function previewImage(input, previewId) {
 </header>
 
 
-    <main>
+    <main class="main">
         <section class="container-fluid">
             {% block body %}
             {% endblock %}

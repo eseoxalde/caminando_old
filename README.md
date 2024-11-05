@@ -9,6 +9,13 @@ Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una e
 - Symfony CLI
 - MySQL o cualquier otra base de datos compatible
 
+## Otras
+
+- Bootstrap 4.0.0
+- TinyMCE 6.x
+- Google Fonts (Roboto)
+- FontAwesome (local)
+
 ## Instalación
 
 1. Clona el repositorio:

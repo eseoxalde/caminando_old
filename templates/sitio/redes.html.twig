@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="row">
+    <div class="col-md-6 border border-2">
+        <h1>Configuración de redes sociales</h1>
+        <div class="separador"> </div>
+        {{ form_start(form) }}
+        <div class="mb-2">
+            {{ form_label(form.instagram, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.instagram, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.facebook, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.facebook, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.twitter, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.twitter, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.tiktok, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.tiktok, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.youtube, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.youtube, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button type="submit" class="btn btn-primary mt-3 mr-2">Guardar cambios de redes sociales</button>
+        <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
+        {{ form_end(form) }}
+    </div>
+    <div class="col-md-6 border border-2">
+        <h1>Configuración del Foro</h1>
+        <div class="separador"> </div>
+        {{ form_start(foroForm) }}
+        <div class="mb-2">
+            {{ form_label(foroForm.nombre, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(foroForm.nombre, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(foroForm.descripcion, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(foroForm.descripcion, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(foroForm.postsNormalesLimit, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(foroForm.postsNormalesLimit, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(foroForm.postsImportantesLimit, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(foroForm.postsImportantesLimit, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button type="submit" class="btn btn-primary mb-3 mt-3">Guardar cambios del foro</button>
+        <button type="button" class="btn btn-secondary mb-3 mt-3" onclick="window.history.back()">Cancelar</button>
+        {{ form_end(foroForm) }}
+
+        <h2>Categorías Existentes</h2>
+        <a href="{{ path('categoria_new') }}" class="btn btn-success mb-3 mt-3">Crear nueva categoría</a>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                    <tr>
+                        <td>{{ categoria.name }}</td>
+                        <td>{{ categoria.description }}</td>
+                        <td>
+                            <a href="{{ path('categoria_edit', {'id': categoria.id}) }}" class="btn btn-sm btn-primary mb-1">Editar</a>
+                            <a href="{{ path('categoria_delete', {'id': categoria.id}) }}" class="btn btn-sm btn-danger" 
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?');">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No hay categorías disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article>
+    <h1 class="mt-3">{{ foro.nombre }}</h1>
+    <p>{{ foro.descripcion }}</p>
+    <div class="separador"></div>
+
+    {# {% set isFavorite = false %}
+    {% if app.user %}
+        {% for favorite in post.favorites %}
+            {% if favorite.user.id == app.user.id %}
+                {% set isFavorite = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %} #}
+
+    <div class="d-flex align-items-center">
+        <div class="mb-2">
+            {# {% if isFavorite %}
+                <span class="badge bg-warning text-dark"><i class="fa-solid fa-star"></i> Favorito</span>
+            {% endif %} #}
+            {% if post.isImportant %}
+                <i class="fa-solid fa-thumbtack"></i> 
+                <span class="bi bi-pin-angle-fill" title="Post importante"></span>
+            {% endif %}
+        </div>
+        <h2 class="ml-3 mb-2">{{ post.title }}</h2>
+    </div>
+
+    {# {% if app.user %}
+        <form action="{{ path('post_favorite', {'id': post.id}) }}" method="post" class="d-inline">
+            <input type="hidden" name="_token" value="{{ csrf_token('toggle_favorite') }}">
+            <button type="submit" class="btn btn-warning m-3">
+                <i class="fa-solid fa-star"></i>
+                {{ isFavorite ? 'Ya no es favorito' : 'Marcar como favorito' }}
+            </button>
+        </form>
+    {% endif %} #}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <form action="{{ path('post_important', {'id': post.id}) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger m-3">
+                <i class="fa-solid fa-thumbtack"></i>
+                {{ post.isImportant ? 'Ya no es importante' : 'Marcar como importante' }}
+            </button>
+        </form>
+    {% endif %}
+    
+    <div class="card">
+        <div class="{% if post.isImportant %}card-important {% endif %} p-3">
+            <div class="autor d-flex align-items-center">
+                <div class="autor-foto">
+                    {% if post.author.foto %}
+                        <img src="{{ asset(post.author.foto) }}" alt="Foto de {{ post.author.username }}" class="img-fluid rounded-circle mr-3" width="50" height="50">
+                    {% else %}
+                        <img src="{{ asset('img/icons8-huella-de-oso-26.png') }}" alt="Foto de perfil predeterminada" class="img-fluid rounded-circle" width="50" height="50">
+                    {% endif %}
+                </div>
+                <div class="autor-info ms-3">
+                    <div class="autor-nombre">
+                        {% if is_granted('ROLE_MODERATOR') %}
+                            <span class="badge bg-secondary">Moderador</span>
+                        {% endif %}
+                        <strong>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('user_profile', { id: post.author.id }) }}">{{ post.author.username ? post.author.username : post.author.email }}</a>
+                        {% else %}
+                            {{ post.author.username ? post.author.username : post.author.email }}
+                         {% endif %} </strong>
+                    </div>
+                    <div class="autor-fecha">
+                        <small>{{ post.createdAt|date('d-m-Y H:i') }}</small>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p>{{ post.content }}</p>
+        </div>
+            {% for comentario in comentarios %}
+                <div class="comentario card">
+                    <p><strong>{{ comentario.author.username ? comentario.author.username : comentario.author.email }}</strong> dijo:</p>
+                    <p>{{ comentario.content | raw }}</p>
+                    <small class="text-muted">Publicado el {{ comentario.createdAt|date('d/m/Y H:i') }}</small>
+                </div>
+            {% else %}
+                <div class="comentario card">
+                    <p>No hay comentarios aún.</p>
+                </div>
+            {% endfor %}
+            
+            <div class="separador"></div>
+            
+            {% if app.user %}
+    <form action="{{ path('post_show', {'id': post.id}) }}" method="post">
+    
+    {{ form_start(comentarioForm) }}
+
+ {{ form_label(comentarioForm.content, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(comentarioForm.content, {'attr': {'class': 'form-control tinymce'}}) }}
+
+    <button type="submit" class="btn btn-primary">Enviar Comentario</button>
+    {{ form_end(comentarioForm) }}
+    
+</form>
+
+{% else %}
+    <a href="{{ path('login') }}" class="btn btn-primary mt-3">Debes estar logueado para comentar</a>
+{% endif %}
+
+    </div>
+</article>
+{% endblock %}

@@ -5,6 +5,9 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
 }
+.main{
+    padding: 0 50px 0 50px;
+}
 
 .logo {
     text-align: center;
@@ -21,7 +24,7 @@ header i {
     color: antiquewhite;
 }
 .navbar-nav{
-    padding-right: 50px;
+    padding-right: 70px;
 }
 .navbar {
     background-color: #e48c3c;
@@ -60,8 +63,8 @@ header i {
     font-size: 0.875rem; 
 }
 .table th {
-    background-color: #767676; 
-    color: #ffffffce;
+    background-color: #e48c3c; 
+    color: #2c2b2bce;
     font-size: 1rem; 
 }
 .table td img.user-photo {
@@ -70,15 +73,50 @@ header i {
     width: 50px;
     height: 50px;
 }
+
+/* Estilos para filas */
 .parent-row {
-    background-color: #D68910; 
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #D68910;
+    
 }
+
 .child-row {
-    background-color: #F8C471; 
+    
+    background-color: #f9f9f9; 
+    border-left: 2px solid #ddd;
 }
+.child-row .menuNombre{
+    padding-left: 40px;
+}
+
 .no-children-row {
-    background-color: #9C640C;
-    color:beige
+    background-color: #F8C471;
+    font-weight: bold;
+}
+
+.collapse-row {
+    display: none; 
+}
+
+.visible {
+    color: green;
+    font-weight: bold;
+}
+
+.hidden {
+    color: red;
+    font-weight: bold;
+}
+
+.toggle-icon {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.show {
+    display: table-row; 
 }
 /***/
 
@@ -142,6 +180,32 @@ header i {
     background-clip: padding-box;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+/*foro*/
+.catDes{
+    padding-left: 30px;
+}
+.table{
+    font-size: 16px;
+}
+.card-important {
+    background-color: #ffeeba;
+}
+
+
+/** perfil  **/
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+  
+  .container {
+    padding: 2px 16px;
+  }
+
 /* Galeria */
 .gallery {
     display: flex;
@@ -175,10 +239,6 @@ header i {
     display: flex;
     align-items: center;
 }
-
-
-
-
 
 
 .grid-container {

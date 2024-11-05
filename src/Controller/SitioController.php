@@ -14,8 +14,13 @@ use App\Entity\Pagina;
 use App\Repository\SitioRepository;
 use App\Repository\PaginaRepository;
 use App\Repository\MenuRepository;
+use App\Repository\ForoRepository;
+use App\Repository\CategoriaRepository;
+
 use App\Form\PaginaType;
 use App\Form\SitioType;
+use App\Form\RedesType;
+use App\Form\ForoType;
 
 #[Route('/sitio')]
 class SitioController extends BaseController
@@ -82,5 +87,51 @@ class SitioController extends BaseController
             'menues' => $this->menues,
         ]);
     }
+
+    #[Route('/redes', name: 'redes_edit')]
+    public function edit_redes(Request $request, SitioRepository $sitioRepository, PaginaRepository $paginaRepository, ForoRepository $foroRepository, CategoriaRepository $categoriaRepository): Response
+    {
+        $form = $this->createForm(RedesType::class, $this->sitio);
+        $form->handleRequest($request);
+    
+        $foro = $foroRepository->find(1);
+        if (!$foro) {
+            $this->addFlash('error', 'Configuración del foro no encontrada.');
+            return $this->redirectToRoute('inicio'); 
+        }
+    
+        $foroForm = $this->createForm(ForoType::class, $foro);
+        $foroForm->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($this->sitio);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Sitio actualizado correctamente.');
+            return $this->redirectToRoute('inicio');
+        }
+    
+        if ($foroForm->isSubmitted() && $foroForm->isValid()) {
+            $this->entityManager->persist($foro);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Configuración del foro actualizada correctamente.');
+            return $this->redirectToRoute('redes_edit'); 
+        }
+
+        $paginas = $paginaRepository->findAll();
+
+        $categorias = $categoriaRepository->findAll();
+    
+        return $this->renderWithMenu('sitio/redes.html.twig', [
+            'paginas' => $paginas,
+            'sitio' => $this->sitio,
+            'form' => $form->createView(),
+            'menues' => $this->menues,
+            'foroConfig' => $foro,
+            'foroForm' => $foroForm->createView(),
+            'categorias' => $categorias 
+        ]);
+    }
+    
+    
     
 }

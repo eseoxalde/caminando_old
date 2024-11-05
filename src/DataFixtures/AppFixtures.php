@@ -29,6 +29,12 @@ class AppFixtures extends Fixture
             'header' => 'cambiar',
             'nombre_sitio'=>'cambiame'
         ]);
+        ForoFactory::createOne([
+            'nombre'=>'Foro del sitio en construccion',
+            'postsNormalesLimit'=>1,
+            'postsImportantesLimit'=>1
+        ]);
+
 
         UserFactory::createMany(6);
 

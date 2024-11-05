@@ -14,6 +14,7 @@ use App\Repository\SitioRepository;
 use App\Repository\PaginaRepository;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 
 #[Route('/perfil')]
 class ProfileController extends BaseController
@@ -37,8 +38,18 @@ class ProfileController extends BaseController
             'menues' => $this->menues,
         ]);
     }
+
+    #[Route('/{id}', name: 'user_profile')]
+    public function show(User $user): Response
+    {
+        return $this->renderWithMenu('perfil/show.html.twig', [
+            'user' => $user,
+            'sitio' => $this->sitio,
+            'menues' => $this->menues,
+        ]);
+    }
     
-    #[Route('/edit', name: 'profile_edit')]
+    #[Route('/{id}/edit', name: 'profile_edit')]
     public function edit(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -46,6 +57,9 @@ class ProfileController extends BaseController
         PaginaRepository $paginaRepository
     ): Response {
         $user = $this->getUser();
+        if (!$user) {
+        throw $this->createAccessDeniedException('No se ha autenticado ningún usuario.');
+    }
         $form = $this->createForm(UserProfileType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Crear Nueva Categoría</h1>
+     <div class="separador"> </div>
+
+    {{ form_start(form) }}
+        <div class="mb-2">
+            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <button class="btn btn-primary">Crear Categoría</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('categoria_index') }}" class="btn btn-warning mt-3 mb-3">Ir al listado de categorías</a>
+    <button type="button" class="btn btn-secondary mt-3 mb-3" onclick="window.history.back()">Cancelar</button>
+
+{% endblock %}

@@ -35,8 +35,6 @@ security:
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/perfil, roles: ROLE_USER }
-    - { path: ^/uploads/headers, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/uploads/index, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/pagina/all, roles: ROLE_ADMIN }
     - { path: ^/pagina/new, roles: ROLE_ADMIN }
     - { path: ^/pagina/delete, roles: ROLE_ADMIN }
@@ -48,3 +46,9 @@ security:
     - { path: ^/perfil/, roles: ROLE_ADMIN }
     - { path: ^/sitio/, roles: ROLE_ADMIN }
     - { path: ^/usuario/, roles: ROLE_ADMIN }
+    - { path: ^/post/nuevo, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/post/\d+/comentario/nuevo, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/categoria/nuevo, roles: ROLE_ADMIN }-
+    - { path: ^/categoria/\d+/editar, roles: ROLE_ADMIN }
+    - { path: ^/categoria/\d+/eliminar, roles: ROLE_ADMIN }
+    

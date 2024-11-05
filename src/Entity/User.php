@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -51,6 +53,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?bool $notificaciones = null;
+
+/**
+     * @var Collection<int, FavoritePost>|null
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: FavoritePost::class, orphanRemoval: true)]
+    private Collection $favoritePosts;
+
+
+    public function __construct()
+    {
+        $this->favoritePosts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -195,6 +209,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNotificaciones(?bool $notificaciones): static
     {
         $this->notificaciones = $notificaciones;
+
+        return $this;
+    }
+
+    public function getFavoritePosts(): Collection
+    {
+        return $this->favoritePosts;
+    }
+
+    public function addFavoritePost(FavoritePost $favoritePost): static
+    {
+        if (!$this->favoritePosts->contains($favoritePost)) {
+            $this->favoritePosts->add($favoritePost);
+            $favoritePost->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoritePost(FavoritePost $favoritePost): static
+    {
+        if ($this->favoritePosts->removeElement($favoritePost)) {
+            if ($favoritePost->getUser() === $this) {
+                $favoritePost->setUser(null);
+            }
+        }
 
         return $this;
     }

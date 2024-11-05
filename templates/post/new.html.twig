@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Crear Nuevo Post</h1>
+ <div class="separador"> </div>
+
+    {{ form_start(form) }}
+        {{ form_row(form.title, {
+            'label': 'Título del Post',
+            'attr': {
+                'placeholder': 'Introduce el título del post'
+            }
+        }) }}
+
+        {{ form_row(form.content, {
+            'label': 'Contenido del Post',
+            'attr': {
+                'placeholder': 'Escribe el contenido aquí',
+                'rows': 8
+            }
+        }) }}
+
+        {{ form_row(form.categoria, {
+            'label': 'Categoría',
+            'placeholder': 'Selecciona una categoría'
+        }) }}
+
+        <button class="btn btn-primary">Publicar</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Volver al listado de posts</a>
+{% endblock %}

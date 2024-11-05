@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Editar Post</h1>
+    <div class="separador"> </div>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">Guardar Cambios</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Volver a la Lista de Posts</a>
+{% endblock %}

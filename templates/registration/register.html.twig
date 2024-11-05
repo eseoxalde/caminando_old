@@ -17,13 +17,14 @@
             label: 'Contraseña',
             attr: { class: 'form-control' }
         }) }}
-        <div class="form-check">
+        <div class="form-check my-3">
             {{ form_widget(registrationForm.agreeTerms, {
                 attr: { class: 'form-check-input' }
             }) }}
-            {{ form_label(registrationForm.agreeTerms, 'Acepto los términos y condiciones', {
-                attr: { class: 'form-check-label' }
-            }) }}
+            <label class="form-check-label">
+                Acepto los <a href="{{ path('tyc') }}" target="_blank">Términos y Condiciones</a>
+            </label>
+            {{ form_errors(registrationForm.agreeTerms) }}
         </div>
         <button type="submit" class="btn btn-primary">Registrarse</button>
         {{ form_end(registrationForm) }}

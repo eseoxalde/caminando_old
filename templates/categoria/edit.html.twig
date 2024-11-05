@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article>
+    <h1>Editar Categoría</h1>
+    <div class="separador"> </div>
+
+    {{ form_start(form) }}
+<div class="mb-2">
+            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-2">
+            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button class="btn btn-primary mb-1">Guardar Cambios</button>
+    {{ form_end(form) }}
+    <hr>
+    <form method="post" action="{{ path('categoria_delete', { 'id': categoria.id }) }}" onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categoria.id) }}">
+        <button class="btn btn-danger">Eliminar Categoría</button>
+    </form>
+    <a href="{{ path('categoria_index') }}" class="btn btn-warning mt-3 mb-3">Ir al listado de categorías</a>
+    <button type="button" class="btn btn-secondary mt-3 mb-3" onclick="window.history.back()">Cancelar</button>
+
+</article>
+{% endblock %}
