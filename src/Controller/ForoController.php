@@ -19,6 +19,9 @@ use App\Repository\MenuRepository;
 use App\Repository\PostRepository;
 use App\Repository\ForoRepository;
 use App\Repository\CategoriaRepository;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+
 
 class ForoController extends BaseController
 {
@@ -39,8 +42,6 @@ class ForoController extends BaseController
         $this->categoriaRepository = $categoriaRepository;
         $this->postRepository = $postRepository;
     }
-
-    // Manejo de Categorías
 
     #[Route('/categorias', name: 'categoria_index')]
     public function indexcategoria(EntityManagerInterface $entityManager): Response
@@ -114,8 +115,6 @@ class ForoController extends BaseController
         ]);
     }
 
-    // Manejo de Posts
-
     #[Route('/posts', name: 'post_index')]
     public function index(EntityManagerInterface $entityManager, PostRepository $postRepository, CategoriaRepository $categoriaRepository, ForoRepository $foroRepository): Response
     {
@@ -141,12 +140,12 @@ class ForoController extends BaseController
             'menues' => $this->menues,
         ]);
     }
-    
-
 
     #[Route('/post/nuevo', name: 'post_new')]
     public function newPost(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $foro = $this->foroRepository->findLatest();
+
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
 
@@ -166,28 +165,27 @@ class ForoController extends BaseController
             'form' => $form->createView(),
             'sitio' => $this->sitio,
             'menues' => $this->menues,
+            'foro'=>$foro,
         ]);
     }
-
 
     #[Route('/post/{id}/editar', name: 'post_edit')]
     public function editPost(Request $request, EntityManagerInterface $entityManager, Post $post): Response
     {
+        if ($post->getAuthor() !== $this->getUser() && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            throw $this->createAccessDeniedException();
+        }
         $form = $this->createForm(PostType::class, $post);
-
         $form->handleRequest($request);
-
         $deleteForm = $this->createFormBuilder()
         ->setAction($this->generateUrl('post_delete', ['id' => $post->getId()]))
         ->setMethod('DELETE')
         ->getForm();
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
             return $this->redirectToRoute('post_index');
         }
-
         return $this->renderWithMenu('post/edit.html.twig', [
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -197,42 +195,28 @@ class ForoController extends BaseController
         ]);
     }
 
-//Favorito
-#[Route('/post/{id}/favorito', name: 'post_favorito', methods: ['POST'])]
-public function toggleFavorite(Post $post, Request $request): Response
-{
-    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-    $entityManager = $this->getDoctrine()->getManager();
-    $user = $this->getUser();
+    #[Route('/post/{id}/favorito', name: 'post_favorito', methods: ['POST'])]
+    public function toggleFavorite(Post $post, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
 
-    // Verificar el token CSRF
-    if (!$this->isCsrfTokenValid('toggle_favorite', $request->request->get('_token'))) {
-        throw new InvalidCsrfTokenException();
-    }
-
-    // Lógica para agregar o quitar el favorito
-    $favoritePost = $entityManager->getRepository(FavoritePost::class)->findOneBy(['post' => $post, 'user' => $user]);
-
-    if ($favoritePost) {
-        // Eliminar el favorito
-        $entityManager->remove($favoritePost);
-    } else {
-        // Agregar el favorito
-        $favoritePost = new FavoritePost();
-        $favoritePost->setPost($post);
-        $favoritePost->setUser($user);
-        $entityManager->persist($favoritePost);
-    }
-
-    $entityManager->flush();
-
-    return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
-}
-
-
-//Importante
+        $favoritePost = $entityManager->getRepository(FavoritePost::class)->findOneBy(['post' => $post, 'user' => $user]);
     
+        if ($favoritePost) {
+            $entityManager->remove($favoritePost);
+        } else {
+            $favoritePost = new FavoritePost();
+            $favoritePost->setPost($post);
+            $favoritePost->setUser($user);
+            $entityManager->persist($favoritePost);
+        }
+        $entityManager->flush();
+    
+        return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+    }
+    
+
     #[Route('/post/{id}/importante', name: 'post_important', methods: ['POST'])]
     public function important(Post $post, EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -243,7 +227,6 @@ public function toggleFavorite(Post $post, Request $request): Response
     }
 
     // Manejo de Comentarios
-
     #[Route('/post/{postId}/comentario/nuevo', name: 'comentario_new', methods: ['POST'])]
     public function newcomentario(Request $request, EntityManagerInterface $entityManager, Post $post): Response
     {
@@ -289,41 +272,33 @@ public function toggleFavorite(Post $post, Request $request): Response
         ]);
     }
 
-    // Mostrar un Post con Comentarios
     #[Route('/post/{id}', name: 'post_show')]
-public function showPost(Request $request, Post $post): Response
-{
-    $comentario = new Comentario();
-    $form = $this->createForm(ComentarioType::class, $comentario);
-    $form->handleRequest($request);
- 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $comentario->setPost($post);
-        $comentario->setAuthor($this->getUser());
-        $this->entityManager->persist($comentario);
-        $this->entityManager->flush();
- 
-        return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
-    }
- 
-    $comentarios = $post->getComentarios();
- 
-    return $this->renderWithMenu('post/show.html.twig', [
-        'post' => $post,
-        'comentarios' => $comentarios,
-        'comentarioForm' => $form->createView(),
-        'foro' => $this->foroRepository->findLatest(),
-        'sitio' => $this->sitio,
-        'menues' => $this->menues,
-    ]);
-}
-
+    public function showPost(Request $request, Post $post): Response
+    {
+        $comentario = new Comentario();
+        $form = $this->createForm(ComentarioType::class, $comentario);
+        $form->handleRequest($request);
     
-
-
-
-
-    // Eliminar un Post
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comentario->setPost($post);
+            $comentario->setAuthor($this->getUser());
+            $this->entityManager->persist($comentario);
+            $this->entityManager->flush();
+    
+            return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
+        }
+    
+        $comentarios = $post->getComentarios();
+    
+        return $this->renderWithMenu('post/show.html.twig', [
+            'post' => $post,
+            'comentarios' => $comentarios,
+            'comentarioForm' => $form->createView(),
+            'foro' => $this->foroRepository->findLatest(),
+            'sitio' => $this->sitio,
+            'menues' => $this->menues,
+        ]);
+    }
 
     #[Route('/post/{id}/eliminar', name: 'post_delete')]
     public function deletePost(EntityManagerInterface $entityManager, Post $post): Response
@@ -334,8 +309,6 @@ public function showPost(Request $request, Post $post): Response
         return $this->redirectToRoute('post_index');
     }
 
-    // Eliminar una Categoría
-
     #[Route('/categoria/{id}/eliminar', name: 'categoria_delete')]
     public function deletecategoria(EntityManagerInterface $entityManager, Categoria $categoria): Response
     {
@@ -344,4 +317,19 @@ public function showPost(Request $request, Post $post): Response
 
         return $this->redirectToRoute('categoria_index'); 
     }
+
+    #[Route('/comentario/{id}/delete', name: 'comentario_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function delete(Request $request, Comentario $comentario, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->getUser() !== $comentario->getAuthor()) {
+            throw $this->createAccessDeniedException('No tienes permiso para eliminar este comentario.');
+        }
+
+        $comentario->setDeleted(true);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('post_show', ['id' => $comentario->getPost()->getId()]);
+    }
+
 }

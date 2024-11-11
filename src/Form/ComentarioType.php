@@ -14,7 +14,7 @@ class ComentarioType extends AbstractType
     {
         $builder
         ->add('content', TextareaType::class, [
-                'label' => 'Comentario',
+                'label' => 'Escribir un Comentario',
                 'required' => false,
                 'attr' => ['class' => 'form-control tinymce']
             ])

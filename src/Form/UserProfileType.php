@@ -20,9 +20,14 @@ class UserProfileType extends AbstractType
             ->add('username', null, ['label' => 'Nombre de usuario'])
             ->add('nombre', null, ['label' => 'Nombre'])
             ->add('apellido', null, ['label' => 'Apellido'])
-            ->add('fechaNacimiento', null, ['label' => 'Fecha de nacimiento'], DateType::class, [
+            ->add('pais', null, ['label' => 'Pais'])
+            ->add('ciudad', null, ['label' => 'Ciudad'])
+            ->add('fechaNacimiento', DateType::class, [
                 'widget' => 'single_text',
+                'label' => 'Fecha de nacimiento',
+                'years' => range(date('Y') - 100, date('Y')), 
             ])
+            
             ->add('foto', FileType::class, [
                 'label' => 'Foto de Perfil',
                 'mapped' => false, 

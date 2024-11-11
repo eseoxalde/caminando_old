@@ -32,7 +32,7 @@ class Post
 
     #[ORM\ManyToOne(targetEntity: Categoria::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private Categoria $categoria; // Cambié 'categoria' a 'Categoria'
+    private Categoria $categoria;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isImportant = false;

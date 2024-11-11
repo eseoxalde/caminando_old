@@ -21,15 +21,13 @@ class PostType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenido',
-                'attr' => ['rows' => 10],
+                'required' => false,
+                'attr' => ['class' => 'form-control tinymce']
             ])
             ->add('categoria', EntityType::class, [
                 'class' => Categoria::class,
                 'choice_label' => 'name',
                 'label' => 'Categoría',
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Guardar',
             ]);
     }
 

@@ -45,6 +45,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $apellido = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pais = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ciudad = null;
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $fechaNacimiento = null;
 
@@ -59,6 +65,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: FavoritePost::class, orphanRemoval: true)]
     private Collection $favoritePosts;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $ultimoAcceso;
 
 
     public function __construct()
@@ -177,6 +186,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPais(): ?string
+    {
+        return $this->pais;
+    }
+
+    public function setPais(?string $pais): static
+    {
+        $this->pais = $pais;
+
+        return $this;
+    }
+
+    public function getCiudad(): ?string
+    {
+        return $this->ciudad;
+    }
+
+    public function setCiudad(?string $ciudad): static
+    {
+        $this->ciudad = $ciudad;
+
+        return $this;
+    }
+
     public function getFechaNacimiento(): ?\DateTimeInterface
     {
         return $this->fechaNacimiento;
@@ -235,6 +268,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $favoritePost->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUltimoAcceso(): ?\DateTimeInterface
+    {
+        return $this->ultimoAcceso;
+    }
+
+    public function setUltimoAcceso(\DateTimeInterface $fecha): self
+    {
+        $this->ultimoAcceso = $fecha;
 
         return $this;
     }

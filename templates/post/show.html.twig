@@ -6,20 +6,20 @@
     <p>{{ foro.descripcion }}</p>
     <div class="separador"></div>
 
-    {# {% set isFavorite = false %}
+    {% set isFavorite = false %}
     {% if app.user %}
         {% for favorite in post.favorites %}
             {% if favorite.user.id == app.user.id %}
                 {% set isFavorite = true %}
             {% endif %}
         {% endfor %}
-    {% endif %} #}
+    {% endif %}
 
     <div class="d-flex align-items-center">
         <div class="mb-2">
-            {# {% if isFavorite %}
-                <span class="badge bg-warning text-dark"><i class="fa-solid fa-star"></i> Favorito</span>
-            {% endif %} #}
+            {% if isFavorite %}
+                <span class="badge bg-warning text-dark p-3"><i class="fa-solid fa-star"></i> Favorito</span>
+            {% endif %}
             {% if post.isImportant %}
                 <i class="fa-solid fa-thumbtack"></i> 
                 <span class="bi bi-pin-angle-fill" title="Post importante"></span>
@@ -28,15 +28,22 @@
         <h2 class="ml-3 mb-2">{{ post.title }}</h2>
     </div>
 
-    {# {% if app.user %}
-        <form action="{{ path('post_favorite', {'id': post.id}) }}" method="post" class="d-inline">
-            <input type="hidden" name="_token" value="{{ csrf_token('toggle_favorite') }}">
+    {% if app.user %}
+        <form action="{{ path('post_favorito', { id: post.id }) }}" method="post" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('favorite' ~ post.id) }}">
+            {% if isFavorite %}
+            <button type="submit" class="btn btn-secondary m-3">
+                <i class="fa-solid fa-star"></i>
+                 Ya no es favorito
+            </button>
+            {% else %}
             <button type="submit" class="btn btn-warning m-3">
                 <i class="fa-solid fa-star"></i>
-                {{ isFavorite ? 'Ya no es favorito' : 'Marcar como favorito' }}
+                Marcar como favorito
             </button>
+             {% endif %}
         </form>
-    {% endif %} #}
+    {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
         <form action="{{ path('post_important', {'id': post.id}) }}" method="post" class="d-inline">
@@ -70,20 +77,40 @@
                          {% endif %} </strong>
                     </div>
                     <div class="autor-fecha">
-                        <small>{{ post.createdAt|date('d-m-Y H:i') }}</small>
+                        <small>{{ post.createdAt|date('d/m/Y H:i') }}</small>
+                    </div>
+                    <div>
+                        {% if app.user and (post.author.id == app.user.id or is_granted('ROLE_ADMIN')) %}
+                            <a href="{{ path('post_edit', { 'id': post.id }) }}" class="btn btn-warning mt-3">
+                                <i class="fa-solid fa-pencil"></i> Editar
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <hr>
-            <p>{{ post.content }}</p>
+            <p>{{ post.content | raw }}</p>
         </div>
             {% for comentario in comentarios %}
+            {% if comentario.deleted %}
+                <div class="comentario card">
+                    <p><i>Este comentario ha sido eliminado por el autor.</i></p>
+                </div>
+            {% else %}
                 <div class="comentario card">
                     <p><strong>{{ comentario.author.username ? comentario.author.username : comentario.author.email }}</strong> dijo:</p>
                     <p>{{ comentario.content | raw }}</p>
                     <small class="text-muted">Publicado el {{ comentario.createdAt|date('d/m/Y H:i') }}</small>
+
+                    {% if app.user and comentario.author.id == app.user.id %}
+                        <form action="{{ path('comentario_delete', { 'id': comentario.id }) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comentario.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    {% endif %}
                 </div>
-            {% else %}
+            {% endif %}
+        {% else %}
                 <div class="comentario card">
                     <p>No hay comentarios aún.</p>
                 </div>
@@ -95,11 +122,9 @@
     <form action="{{ path('post_show', {'id': post.id}) }}" method="post">
     
     {{ form_start(comentarioForm) }}
-
- {{ form_label(comentarioForm.content, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(comentarioForm.content, {'attr': {'class': 'form-control tinymce'}}) }}
-
-    <button type="submit" class="btn btn-primary">Enviar Comentario</button>
+        {{ form_label(comentarioForm.content, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(comentarioForm.content, {'attr': {'class': 'form-control tinymce'}}) }}
+        <button type="submit" class="btn btn-primary mt-3">Enviar Comentario</button>
     {{ form_end(comentarioForm) }}
     
 </form>

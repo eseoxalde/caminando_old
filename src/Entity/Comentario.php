@@ -19,6 +19,9 @@ class Comentario
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
 
+    #[ORM\Column(type: 'boolean')]
+    private string $deleted;
+
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comentarios')]
     #[ORM\JoinColumn(nullable: false)]
     private Post $post;
@@ -82,6 +85,17 @@ class Comentario
     {
         $this->author = $author;
 
+        return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
         return $this;
     }
 }

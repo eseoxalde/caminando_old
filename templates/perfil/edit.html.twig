@@ -39,6 +39,14 @@
                 {{ form_label(form.apellido, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.apellido, {'attr': {'class': 'form-control'}}) }}
             </div>
+            <div class="mb-2"> 
+                {{ form_label(form.pais, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.pais, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.ciudad, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.ciudad, {'attr': {'class': 'form-control'}}) }}
+            </div>
             <div class="mb-3"> 
                 {{ form_label(form.fechaNacimiento, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.fechaNacimiento, {'attr': {'class': 'form-control', 'placeholder': 'DD/MM/YYYY'}}) }}
