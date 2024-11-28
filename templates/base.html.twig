@@ -2,11 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Proyecto de extensión de la UNLP" />
+    <meta name="description" content="{{ sitio.metaDescription }}">
+    <title>{{ sitio.metaTitle ? sitio.metaTitle : 'Título por defecto' }}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <meta property="og:title" content="{{ sitio.ogTitle }}" />
+    <meta property="og:description" content="{{ sitio.ogDescription }}" />
+    <meta property="og:image" content="{{ sitio.ogImage }}" />
+    <meta property="og:url" content="{{ app.request.uri }}" />
+    <meta property="og:type" content="website" />
+
+{% block head %}
+
+    {% endblock %}
+
+
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-    <title>{{ sitio.nombreSitio }}</title>
     <link rel="shortcut icon" href="{{ asset('img/index/logo.ico')}}" type="image/x-icon" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -64,6 +76,16 @@ function previewImage(input, previewId) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const toggleButton = document.querySelector('.toggle-menu');
+    const adminMenu = document.querySelector('.admin-menu');
+
+    toggleButton.addEventListener('click', () => {
+        adminMenu.classList.toggle('collapsed');
+        adminMenu.classList.toggle('expanded');
+    });
+});
 
 
 </script>
@@ -132,28 +154,11 @@ function previewImage(input, previewId) {
                              {% else %}
                                 <a class="dropdown-item" href="{{ path('perfil') }}" title="Perfil"><i class="fa-solid fa-user"></i> Perfil</a>
                             {% endif %}
+                            <a class="dropdown-item" href="#" title="Notificaciones"><i class="fa-solid fa-bell"></i> Notificaciones</a>
+                            <a class="dropdown-item" href="#" title="Mensajes"><i class="fa-solid fa-envelope"></i> Mensajes</a>
                             <a class="dropdown-item" href="{{ path('app_logout') }}" title="Salir"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
                         </div>
                     </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Configuración
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="adminDropdown">
-                                <a class="dropdown-item" href="{{ path('ayuda') }}" title="Ayuda"><i class="fa-solid fa-circle-question"></i> Manual de uso</a>
-                                <a class="dropdown-item" href="{{ path('sitio_edit') }}" title="Configuración general"><i class="fa-solid fa-gear"></i> Configuración general</a>
-                                <a class="dropdown-item" href="{{ path('pagina_index') }}" title="Páginas"><i class="fa-solid fa-file-lines"></i> Páginas</a>
-                                <a class="dropdown-item" href="{{ path('menu_index') }}" title="Menu"><i class="fa-solid fa-bars"></i> Menu de navegación</a>
-                                <a class="dropdown-item" href="{{ path('carpeta_index') }}" title="Carpetas"><i class="fa-solid fa-folder"></i> Carpetas</a>
-                                <a class="dropdown-item" href="{{ path('usuario_index') }}" title="Usuarios"><i class="fa-solid fa-user-group"></i> Usuarios</a>
-                                <a class="dropdown-item" href="{{ path('redes_edit') }}" title="Carpetas"><i class="fa-solid fa-icons"></i> Foro y Redes Sociales</a>
-                                <a class="dropdown-item" href="#" title="Gestión de Temas y Diseño"><i class="fa-solid fa-pen-ruler"></i> Temas y Diseño</a>
-                                <a class="dropdown-item" href="#" title="Optimizacion"><i class="fa-solid fa-list-check"></i> Optimización</a>
-                                <a class="dropdown-item" href="#" title="Estadisticas"><i class="fa-solid fa-chart-line"></i> Análisis y Estadísticas</a>
-                            </div>
-                        </li>
-                    {% endif %}
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('login') }}" title="Ingresar"> Ingresar</a>
@@ -165,12 +170,57 @@ function previewImage(input, previewId) {
 </header>
 
 
-    <main class="main">
-        <section class="container-fluid">
+<main class="main">
+    <section class="container-fluid d-flex">
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="admin-menu expanded">
+            <button class="toggle-menu" title="Alternar menú">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </button>
+            <h3 class="admin-menu-title">Configuración</h3>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'ayuda' %}active{% endif %}" href="{{ path('ayuda') }}" title="Ayuda">
+                    <i class="fa-solid fa-circle-question"></i> <span>Manual de uso</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'sitio_edit' %}active{% endif %}" href="{{ path('sitio_edit') }}" title="Configuración general">
+                    <i class="fa-solid fa-gear"></i> <span>Configuración general</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'pagina_index' %}active{% endif %}" href="{{ path('pagina_index') }}" title="Páginas">
+                    <i class="fa-solid fa-file-lines"></i> <span>Páginas</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'menu_index' %}active{% endif %}" href="{{ path('menu_index') }}" title="Menú">
+                    <i class="fa-solid fa-bars"></i> <span>Menú de navegación</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'carpeta_index' %}active{% endif %}" href="{{ path('carpeta_index') }}" title="Carpetas">
+                    <i class="fa-solid fa-folder"></i> <span>Carpetas</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'usuario_index' %}active{% endif %}" href="{{ path('usuario_index') }}" title="Usuarios">
+                    <i class="fa-solid fa-user-group"></i> <span>Usuarios</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'redes_edit' %}active{% endif %}" href="{{ path('redes_edit') }}" title="Redes Sociales">
+                    <i class="fa-solid fa-icons"></i> <span>Foro y Redes Sociales</span>
+                </a>
+                <a class="list-group-item list-group-item-action" href="#" title="Gestión de Temas y Diseño">
+                    <i class="fa-solid fa-pen-ruler"></i> <span>Temas y Diseño</span>
+                </a>
+                <a class="list-group-item list-group-item-action {% if app.request.get('_route') == 'index_optimizacion' %}active{% endif %}" href="{{ path('index_optimizacion') }}" title="Optimización">
+                    <i class="fa-solid fa-list-check"></i> <span>Optimización</span>
+                </a>
+                <a class="list-group-item list-group-item-action" href="#" title="Estadísticas">
+                    <i class="fa-solid fa-chart-line"></i> <span>Análisis y Estadísticas</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="body-content flex-grow-1">
             {% block body %}
             {% endblock %}
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
+
+
 <script>
 function toggleContentFields() {
     const contentTypeSelect = document.querySelector('select[name="pagina[contenidoTipo]"]');
@@ -227,13 +277,20 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     <footer class="container-fluid">
         <div class="row">
-            <div class="col-sm-8">
-                <form class="form-inline">
-                    <button class="btn my-2" type="submit">Buscar</button>
-                    <input class="form-control" type="search" placeholder="Buscar" aria-label="Search">
-                </form>
+            <div class="col-sm-6">
+                <div class="logo">
+                    <a href="{{ path('inicio') }}">
+                        {% if sitio.getHeader()  %}
+                            <img src="{{ sitio.logoSitio }}" alt="logo de {{sitio.nombreSitio}}">
+                            <p class="text-center">{{ sitio.nombreSitio }}</p>
+                        {% else %}
+                            <img src="{{ asset('img/icons8-imagen-48.png') }}" alt="Cambiame">
+                            <p class="text-center">Header del sitio, debe cmabiarse</p>
+                        {% endif %}
+                    </a>
+                </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <nav>
                     <ul>
                         {% if sitio.instagram is not null %}

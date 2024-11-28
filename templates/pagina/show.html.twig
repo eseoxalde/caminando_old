@@ -1,4 +1,14 @@
 {% extends 'base.html.twig' %}
+{% block head %}
+
+<head>
+    <meta property="og:title" content="{{ pagina.ogTitle ?: pagina.ogTitle }}" />
+    <meta property="og:description" content="{{ pagina.ogDescription ?: pagina.ogDescription }}" />
+    <meta property="og:image" content="{{ pagina.ogImage ?: pagina.ogImage }}" />
+    <meta property="og:url" content="{{ pagina.ogUrl ?: app.request.uri }}" />
+    <meta property="og:type" content="{{ pagina.ogType ?: 'website' }}" />
+</head>
+{% endblock %}
 
 {% block body %}
 

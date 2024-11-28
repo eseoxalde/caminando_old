@@ -49,6 +49,25 @@ class Pagina
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $textoConLinks = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $slug = null;
+    
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $ogTitle = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $ogDescription = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $ogImage = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $ogUrl = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $ogType = null;
+
+
     public function __construct()
     { }
 
@@ -192,6 +211,76 @@ class Pagina
     {
         $this->textoConLinks = $textoConLinks;
 
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function getOgTitle(): ?string
+    {
+        return $this->ogTitle;
+    }
+
+    public function setOgTitle(?string $ogTitle): self
+    {
+        $this->ogTitle = $ogTitle;
+        return $this;
+    }
+
+    // Getter y Setter para ogDescription
+    public function getOgDescription(): ?string
+    {
+        return $this->ogDescription;
+    }
+
+    public function setOgDescription(?string $ogDescription): self
+    {
+        $this->ogDescription = $ogDescription;
+        return $this;
+    }
+
+    // Getter y Setter para ogImage
+    public function getOgImage(): ?string
+    {
+        return $this->ogImage;
+    }
+
+    public function setOgImage(?string $ogImage): self
+    {
+        $this->ogImage = $ogImage;
+        return $this;
+    }
+
+    // Getter y Setter para ogUrl
+    public function getOgUrl(): ?string
+    {
+        return $this->ogUrl;
+    }
+
+    public function setOgUrl(?string $ogUrl): self
+    {
+        $this->ogUrl = $ogUrl;
+        return $this;
+    }
+
+    // Getter y Setter para ogType
+    public function getOgType(): ?string
+    {
+        return $this->ogType;
+    }
+
+    public function setOgType(?string $ogType): self
+    {
+        $this->ogType = $ogType;
         return $this;
     }
 

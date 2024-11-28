@@ -42,6 +42,24 @@ class Sitio
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $metaTitle = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $metaDescription = null;
+
+        // Título global para Open Graph
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $ogTitle = null;
+    
+        // Descripción global para Open Graph
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $ogDescription = null;
+    
+        // URL de la imagen global para Open Graph
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $ogImage = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -174,5 +192,34 @@ class Sitio
         return $this;
     }
 
+    public function getMetaTitle(): ?string
+    {
+        return $this->metaTitle;
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->metaTitle = $metaTitle;
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): self
+    {
+        $this->metaDescription = $metaDescription;
+        return $this;
+    }
+    public function getOgTitle(): ?string { return $this->ogTitle; }
+    public function setOgTitle(?string $ogTitle): self { $this->ogTitle = $ogTitle; return $this; }
+
+    public function getOgDescription(): ?string { return $this->ogDescription; }
+    public function setOgDescription(?string $ogDescription): self { $this->ogDescription = $ogDescription; return $this; }
+
+    public function getOgImage(): ?string { return $this->ogImage; }
+    public function setOgImage(?string $ogImage): self { $this->ogImage = $ogImage; return $this; }
    
 }

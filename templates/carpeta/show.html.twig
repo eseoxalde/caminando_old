@@ -13,6 +13,7 @@
         </div>
         <div class="mb-3"> 
             {{ form_label(form.altText, null, {'label_attr': {'class': 'form-label'}}) }}
+            <p><small>El texto alternativo en cada imagen mejoran la accesibilidad y ayudar a los motores de búsqueda a comprender el contenido visual de la página.<small></p>
             {{ form_widget(form.altText, {'attr': {'class': 'form-control'}}) }}
         </div>
         <button class="btn btn-primary">Agregar Imagen</button>
@@ -38,7 +39,7 @@
                             <a href="{{ path('imagen_edit', {'id': imagen.id}) }}" class="btn btn-info">Editar texto</a>
                             <form method="post" action="{{ path('imagen_delete', {'id': imagen.id}) }}" style="display:inline;">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ imagen.id) }}">
-                                <button class="btn btn-danger">Borrar</button>
+                                <button class="btn btn-danger mt-2">Borrar</button>
                             </form>
                         </td>
                     </tr>

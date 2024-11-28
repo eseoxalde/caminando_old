@@ -42,8 +42,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nombre = null;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $nombreVisible = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $apellido = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $apellidoVisible = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $pais = null;
@@ -53,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $fechaNacimiento = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $fechaNacimientoVisible = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $foto = null;
@@ -280,6 +289,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUltimoAcceso(\DateTimeInterface $fecha): self
     {
         $this->ultimoAcceso = $fecha;
+
+        return $this;
+    }
+
+    public function getNombreVisible(): ?bool
+    {
+        return $this->nombreVisible;
+    }
+
+    public function setNombreVisible(?bool $nombreVisible): self
+    {
+        $this->nombreVisible = $nombreVisible;
+
+        return $this;
+    }
+
+    public function getApellidoVisible(): ?bool
+    {
+        return $this->apellidoVisible;
+    }
+
+    public function setApellidoVisible(?bool $apellidoVisible): self
+    {
+        $this->apellidoVisible = $apellidoVisible;
+
+        return $this;
+    }
+
+    public function getFechaNacimientoVisible(): ?bool
+    {
+        return $this->FechaNacimientoVisible;
+    }
+
+    public function setFechaNacimientoVisible(?bool $FechaNacimientoVisible): self
+    {
+        $this->FechaNacimientoVisible = $FechaNacimientoVisible;
 
         return $this;
     }

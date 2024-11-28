@@ -6,6 +6,7 @@
     {{ form_start(form) }}
         <div class="mb-3">
             {{ form_label(form.altText, null, {'label_attr': {'class': 'form-label'}}) }}
+            <small>Las etiquetas alt en cada imagen mejoran la accesibilidad y ayudar a los motores de búsqueda a comprender el contenido visual de la página.<small>
             {{ form_widget(form.altText, {'attr': {'class': 'form-control'}}) }}
         </div>
         <button class="btn btn-primary">Guardar</button>

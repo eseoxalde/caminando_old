@@ -8,6 +8,9 @@
         {{ form_start(form) }}
             <div class="mb-2"> 
                 {{ form_label(form.ruta, null, {'label_attr': {'class': 'form-label'}}) }}
+                <p class="small">Esta palabra se utiliza para generar una URL amigable.
+                    Debe ser una palabras clave relevante, que se ajuste al contenido.
+                       </p>
                 {{ form_widget(form.ruta, {'attr': {'class': 'form-control'}}) }}
             </div>
             <div class="mb-2"> 

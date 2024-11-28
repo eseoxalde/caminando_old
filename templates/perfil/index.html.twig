@@ -3,97 +3,131 @@
 {% block body %}
     {% if app.user %}
         <h1 class="mt-3">Bienvenido 
-        {% if app.user.getUsername() %}
-            {{ app.user.getUsername() }}
-        {% else %} 
-            {{ app.user.userIdentifier }}
-        {% endif %}
-    </h1>
-    <div class="separador"> </div>
-    
-    <article class="row justify-content-center">
-        <div class="col-md-8 ">
-            <div class="foto-usuario text-center ml-3 mb-3">
-                {% if app.user.getFoto() %}
-                    <img src="{{ asset(app.user.getFoto()) }}" alt="Foto de perfil" class="img-fluid rounded-circle" width="150" height="150">
-                {% else %}
-                    <img src="{{ asset('img/default-profile.png') }}" alt="Foto de perfil predeterminada" class="img-fluid rounded-circle" width="150" height="150">
-                {% endif %}
+            {{ app.user.getUsername() ?: app.user.userIdentifier }}
+        </h1>
+        <div class="separador"></div>
+        
+        <div class="container mt-4">
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item mr-1">
+                    <a class="nav-link active" id="datos-personales-tab" data-toggle="tab" href="#datos-personales" role="tab" aria-controls="datos-personales" aria-selected="true">Datos Personales</a>
+                </li>
+                <li class="nav-item mr-1">
+                    <a class="nav-link" id="notificaciones-tab" data-toggle="tab" href="#notificaciones" role="tab" aria-controls="notificaciones" aria-selected="false">Notificaciones</a>
+                </li>
+                <li class="nav-item mr-1">
+                    <a class="nav-link" id="foro-tab" data-toggle="tab" href="#foro" role="tab" aria-controls="foro" aria-selected="false">Participación del Foro</a>
+                </li>
+                <li class="nav-item mr-1">
+                    <a class="nav-link" id="mensajes-tab" data-toggle="tab" href="#mensajes" role="tab" aria-controls="mensajes" aria-selected="false">Mensajes</a>
+                </li>
+                <li class="nav-item mr-1">
+                    <a class="nav-link" id="generales-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="false">Generales</a>
+                </li>
+            </ul>
 
-                <div class="mt-3">
-                    <a href="{{ path('profile_edit', {'id': app.user.id}) }}" class="btn btn-primary d-block">Editar perfil</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('sitio_edit') }}" class="btn btn-primary d-block mt-2">Configuración del sitio</a>
-                        <a href="{{ path('ayuda') }}" class="btn btn-primary d-block mt-2">Ayuda</a>
-                    {% endif %}
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Datos Personales -->
+                <div class="tab-pane fade show active" id="datos-personales" role="tabpanel" aria-labelledby="datos-personales-tab">
+                    <div class="card mt-3 p-3">
+                        <div class="text-center">
+                            {% if app.user.getFoto() %}
+                                <img src="{{ asset(app.user.getFoto()) }}" alt="Foto de perfil" class="img-fluid rounded-circle mb-3" width="150" height="150">
+                            {% else %}
+                                <img src="{{ asset('img/default-profile.png') }}" alt="Foto de perfil predeterminada" class="img-fluid rounded-circle mb-3" width="150" height="150">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h4>{{ app.user.getUsername() }}</h4>
+                            <p><strong>Correo:</strong> {{ app.user.getEmail() }}</p>
+                            <p><strong>Nombre:</strong> {{ app.user.getNombre() }}</p>
+                            <p><strong>Apellido:</strong> {{ app.user.getApellido() }}</p>
+                            <p><strong>País:</strong> {{ app.user.getPais() }}</p>
+                            <p><strong>Ciudad:</strong> {{ app.user.getCiudad() }}</p>
+                            <p><strong>Fecha de Nacimiento:</strong> {{ app.user.getFechaNacimiento()|date('d/m/Y') }}</p>
+                            <p><strong>Notificaciones:</strong> {{ app.user.isNotificaciones() ? 'Sí' : 'No' }}</p>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ path('profile_edit', {'id': app.user.id}) }}" class="btn btn-primary d-block">Editar perfil</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('sitio_edit') }}" class="btn btn-primary d-block mt-2">Configuración del sitio</a>
+                                <a href="{{ path('ayuda') }}" class="btn btn-primary d-block mt-2">Ayuda</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foro -->
+                <div class="tab-pane fade" id="foro" role="tabpanel" aria-labelledby="foro-tab">
+                    <div class="card mt-3 p-3">
+                        <h4>Mis Posts Favoritos</h4>
+                        {% for post in posts %}
+                            <div class="post card mb-3 p-3">
+                                <h5>{{ post.title }}</h5>
+                                <p>{{ post.content | raw }}</p>
+                                <p><strong>Categoría:</strong> {{ post.categoria.name }}</p>
+                                <p><small>Publicado el: {{ post.createdAt|date('d/m/Y') }}</small></p>
+                                <a href="{{ path('post_show', { 'id': post.id }) }}">Ver Post</a>
+                            </div>
+                        {% else %}
+                            <p>No tienes posts favoritos.</p>
+                        {% endfor %}
+
+                        <h4>Mis Últimos Posts</h4>
+                        {% for post in ultimosPosts %}
+                            <div class="post card mb-3 p-3">
+                                <h5><a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.title }}</a></h5>
+                                <p><strong>Categoría:</strong> {{ post.categoria.name }}</p>
+                                <p><small>Publicado el: {{ post.createdAt|date('d/m/Y') }}</small></p>
+                            </div>
+                        {% else %}
+                            <p>No tienes posts recientes.</p>
+                        {% endfor %}
+
+                        <h4>Mis Últimos Comentarios</h4>
+                        {% for comentario in ultimosComentarios %}
+                            <div class="post card mb-3 p-3">
+                                <p>{{ comentario.content | raw }}</p>
+                                <p><strong>En Post:</strong> <a href="{{ path('post_show', { 'id': comentario.post.id }) }}">{{ comentario.post.title }}</a></p>
+                                <p><strong>Categoría:</strong> {{ comentario.post.categoria.name }}</p>
+                                <p><small>Comentado el: {{ comentario.createdAt|date('d/m/Y') }}</small></p>
+                            </div>
+                        {% else %}
+                            <p>No tienes comentarios recientes.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Notificaciones -->
+                <div class="tab-pane fade" id="notificaciones" role="tabpanel" aria-labelledby="notificaciones-tab">
+                    <div class="card mt-3 p-3">
+                        <h4>Notificaciones</h4>
+                        <p>Aquí puedes gestionar tus notificaciones.</p>
+                    </div>
+                </div>
+                <!-- Mensajes -->
+                <div class="tab-pane fade" id="mensajes" role="tabpanel" aria-labelledby="mensajes-tab">
+                    <div class="card mt-3 p-3">
+                        <h4>Mensajes</h4>
+                        <p>Aquí puedes gestionar tus notificaciones.</p>
+                    </div>
+                </div>
+
+                <!-- Generales -->
+                <div class="tab-pane fade" id="generales" role="tabpanel" aria-labelledby="generales-tab">
+                    <div class="card mt-3 p-3">
+                        <h4>Privacidad y Políticas</h4>
+                        <p><a href="#">Resumen de retención de datos</a></p>
+                        <h4>Informes</h4>
+                        <p><strong>Sesiones del navegador:</strong> {{ sesiones|length }}</p>
+                        <p><strong>Actividad de accesos:</strong> {{ actividadAccesos|length }}</p>
+                        <p><strong>Último acceso:</strong> {{ ultimoAcceso ? ultimoAcceso|date('d/m/Y H:i') : 'No disponible' }}</p>
+                        <p><strong>Último mensaje en el foro:</strong> {{ ultimoMensaje ? ultimoMensaje.createdAt|date('d/m/Y H:i') : 'No disponible' }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                    <h3>Datos Personales</h3>
-                    <h4><b> {{ app.user.getUsername() }}</b></h4>
-                    <p><strong>Dirección de correo:</strong> {{ app.user.getEmail() }}</p>
-                    <p><strong>Nombre:</strong> {{ app.user.getNombre() }}</p>
-                    <p><strong>Apellido:</strong> {{ app.user.getApellido() }}</p>
-                    <p><strong>Pais: </strong>{{ app.user.getPais() }}</p>
-                    <p><strong>Ciudad: </strong>{{ app.user.getCiudad() }}</p>
-                    <p><strong>Fecha de nacimiento:</strong> {{ app.user.getFechaNacimiento()|date('d/m/Y') }}</p>
-                    <p><strong>Recibir notificaciones:</strong> {{ app.user.isNotificaciones() ? 'Sí' : 'No' }}</p>
-            </div>  
         </div>
-        <div class="col-md-4 text-left">
-            <div class="card">
-                <h4>Privacidad y Políticas</h4>
-                <p>Resumen de retención de datos</p>
-            </div>
-        <div class="card">
-            <h4>Informes</h4>
-            <p>Sesiones del navegador: {{ sesiones|length }}</p>
-            <p>Actividad de accesos: {{ actividadAccesos|length }}</p>
-            <p>Último acceso al sitio: {{ ultimoAcceso ? ultimoAcceso|date('d/m/Y H:i') : 'No disponible' }}</p>
-            <p>Último mensaje en el foro: {{ ultimoMensaje ? ultimoMensaje.createdAt|date('d/m/Y H:i') : 'No disponible' }}</p>
-        </div>
-  
-            <div class="card">
-                <h3>Participación en el Foro</h3>
-                    <div class="separador"> </div>
-                <h4>Mis posts favoritos</h4>
-                {% for post in posts %}
-                    <div class="post card">
-                        <h5>{{ post.title }}</h5> 
-                        <p>{{ post.content | raw}}</p> 
-                        <p><strong>Categoría:</strong> {{ post.categoria.name }}</p> 
-                        <p><small>Fecha de publicación: {{ post.createdAt|date('d/m/Y') }} </small></p>
-                        <a href="{{ path('post_show', { 'id': post.id }) }}">Ver post</a>
-                    </div>
-                {% else %}
-                    <p>No tienes posts favoritos.</p>
-                {% endfor %}
-                    <div class="separador"> </div>
-                <h4>Mis últimos cinco posts</h4>
-                {% for post in ultimosPosts %}
-                     <div class="post card">
-                            <h5><a href="{{ path('post_show', { 'id': post.id }) }}">{{ post.title }}</a></h5>
-                            <p>En: {{ post.categoria.name }}</p> 
-                            <p><small>Fecha de publicación: {{ post.createdAt|date('d/m/Y') }}</small></p>
-                    </div>
-                    {% else %}
-                        <p>No tienes posts recientes.</p>
-                    {% endfor %}
-                    <div class="separador"> </div>
-                <h4>Mis últimos comentarios</h4>
-                    {% for comentario in ultimosComentarios %}
-                        <div class="post card">
-                            <p>{{ comentario.content | raw}}</p>
-                            <p><strong>Post:</strong> <a href="{{ path('post_show', { 'id': comentario.post.id }) }}">{{ comentario.post.title }}</a></p>
-                            <p>En: {{ comentario.post.categoria.name }}</p> 
-                            <p><small>Fecha de publicación: {{ comentario.createdAt|date('d/m/Y') }}</small></p>
-                        </div>
-                    {% else %}
-                        <p>No tienes comentarios recientes.</p>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </article>
-{% endif %}
+    {% endif %}
 {% endblock %}
