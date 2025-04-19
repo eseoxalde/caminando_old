@@ -94,10 +94,10 @@ class SitioController extends BaseController
         $form = $this->createForm(RedesType::class, $this->sitio);
         $form->handleRequest($request);
     
-        $foro = $foroRepository->find(1);
+        $foro = $foroRepository->findOneBy([], ['id' => 'ASC']);
         if (!$foro) {
             $this->addFlash('error', 'Configuración del foro no encontrada.');
-            return $this->redirectToRoute('inicio'); 
+            return $this->redirectToRoute('sitio_edit'); 
         }
     
         $foroForm = $this->createForm(ForoType::class, $foro);
@@ -107,7 +107,7 @@ class SitioController extends BaseController
             $this->entityManager->persist($this->sitio);
             $this->entityManager->flush();
             $this->addFlash('success', 'Sitio actualizado correctamente.');
-            return $this->redirectToRoute('inicio');
+            return $this->redirectToRoute('redes_edit');
         }
     
         if ($foroForm->isSubmitted() && $foroForm->isValid()) {

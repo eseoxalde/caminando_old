@@ -301,6 +301,13 @@ footer i {
     padding: 5px;
     font-size: 1.6em;
 }
+footer .logo p{
+    color: antiquewhite;
+}
+footer .logo a:hover{
+    text-decoration: none;
+    font-weight: bold;
+}
 footer .btn {
     background-color: #b06122;
     color: antiquewhite;

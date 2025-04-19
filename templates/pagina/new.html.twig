@@ -9,6 +9,12 @@
         {{ form_start(form) }}
             <div class="mb-2">
                 {{ form_label(form.ruta, null, {'label_attr': {'class': 'form-label'}}) }}
+                <small>
+                    <p>Esta palabra se utiliza para generar una URL amigable.
+                        Debe ser una palabra clave relevante, que se ajuste al contenido.</p>
+                    <p>No puede repetirse. Sin espacios. Pueden usarse guiones.</p>
+                    <p>Ejemplo: materialDidactico, inicio, flora-y-fauna</p>
+                </small>
                 {{ form_widget(form.ruta, {'attr': {'class': 'form-control'}}) }}
             </div>
             <div class="mb-2">
@@ -53,7 +59,7 @@
                 {{ form_widget(form.ruta_video, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
-        <!-- Campos Condicionales para galeria y carrusel -->
+        <!-- Campos Condicionales para galeria, carrusel y cuadrículas -->
         <div id="conditionalFields" style="display: none;">
             <div class="mb-2">
                 <label id="carpetaLabel" style="display: none;">Selecciona una carpeta:</label>
@@ -62,6 +68,17 @@
                 <div class="mb-2">
                     <a href="{{ path('carpeta_new') }}" class="btn btn-warning mt-3">Crear nueva carpeta</a>
                 </div>
+            </div>
+        </div>
+        <!-- Campos Condicionales para Cuadrículas -->
+        <div id="gridFields" style="display: none;">
+            <div class="mb-2">
+                {{ form_label(form.enlaceCuadricula, 'Enlace para cuadrícula', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.enlaceCuadricula, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2">
+                {{ form_label(form.opcionDescargaCuadricula, 'Permitir descargas en cuadrícula', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.opcionDescargaCuadricula, {'attr': {'class': 'form-check-input'}}) }}
             </div>
         </div>
 

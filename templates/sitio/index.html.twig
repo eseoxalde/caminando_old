@@ -81,6 +81,25 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+            {% elseif pagina.contenidoTipo == 'cuadriculaLinks' and pagina.carpeta is not empty %}
+                <div class="grid">
+                    {% for imagen in pagina.carpeta.imagenes %}
+                        <div class="grid-item">
+                            <a href="{{ imagen.linkInterno }}" class="d-block">
+                                <img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}" class="img-fluid">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% elseif pagina.contenidoTipo == 'cuadriculaDescargas' and pagina.carpeta is not empty %}
+                <div class="grid">
+                    {% for imagen in pagina.carpeta.imagenes %}
+                        <div class="grid-item text-center">
+                            <img src="{{ asset('uploads/images_directory/' ~ imagen.path) }}" alt="{{ imagen.altText }}" class="img-fluid">
+                            <a href="{{ imagen.linkExterno }}" class="btn btn-primary mt-2" download>Descargar</a>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
     {% endif %}

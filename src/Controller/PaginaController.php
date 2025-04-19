@@ -69,74 +69,94 @@ class PaginaController extends BaseController
     }
 
     #[Route('/new', name: 'pagina_new')]
-    public function new(Request $request, PaginaRepository $paginaRepository, CarpetaRepository $carpetaRepository): Response
-    {
-        $pagina = new Pagina();
-        $form = $this->createForm(PaginaType::class, $pagina);
-        $form->handleRequest($request);
-    
-        $carpetas = $carpetaRepository->findAll();
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $existingPage = $paginaRepository->findOneBy(['ruta' => $pagina->getRuta()]);
-            if ($existingPage) {
-                $this->addFlash('error', 'La ruta ya existe. Por favor, elija una ruta diferente.');
-                return $this->renderWithMenu('pagina/new.html.twig', [
-                    'sitio' => $this->sitio,
-                    'form' => $form->createView(),
-                    'menues' => $this->menues,
-                    'pagina' => $pagina,
-                ]);
-            }
-    
-            $fotoFile = $form['ruta_imagen_unica']->getData();
-            if ($fotoFile) {
-                $newFilename = uniqid() . '.' . $fotoFile->guessExtension();
-                try {
-                    $fotoFile->move(
-                        $this->getParameter('app.page_images_directory'),
-                        $newFilename
-                    );
-                    $pagina->setRutaImagenUnica('/uploads/page_images/' . $newFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'No se pudo subir la imagen.');
-                }
-            }
-    
-            $this->entityManager->persist($pagina);
-            $this->entityManager->flush();
-    
-            $menu = new Menu();
-            $menu->setRuta($pagina->getRuta());
-            $menu->setNombre($pagina->getRuta());
-            $menu->setVisible(true);
-            $menu->setPosicion(0);
-    
-            $pagina->setMenu($menu);
-    
-            $this->entityManager->persist($menu);
-            $this->entityManager->flush();
-    
-            if (in_array($pagina->getContenidoTipo(), ['galeria', 'carrusel'])) {
-                foreach ($carpetas as $carpeta) {
-                    $carpeta->addPagina($pagina);
-                    $this->entityManager->persist($carpeta);
-                }
-                $this->entityManager->flush();
-            }
-    
-            $this->addFlash('success', 'Página creada correctamente.');
-            return $this->redirectToRoute('pagina_index');
+public function new(Request $request, PaginaRepository $paginaRepository, CarpetaRepository $carpetaRepository): Response
+{
+    $pagina = new Pagina();
+    $form = $this->createForm(PaginaType::class, $pagina);
+    $form->handleRequest($request);
+
+    $carpetas = $carpetaRepository->findAll();
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Verificar si la ruta ya existe
+        $existingPage = $paginaRepository->findOneBy(['ruta' => $pagina->getRuta()]);
+        if ($existingPage) {
+            $this->addFlash('error', 'La ruta ya existe. Por favor, elija una ruta diferente.');
+            return $this->renderWithMenu('pagina/new.html.twig', [
+                'sitio' => $this->sitio,
+                'form' => $form->createView(),
+                'menues' => $this->menues,
+                'pagina' => $pagina,
+            ]);
         }
-    
-        return $this->renderWithMenu('pagina/new.html.twig', [
-            'sitio' => $this->sitio,
-            'form' => $form->createView(),
-            'menues' => $this->menues,
-            'carpetas' => $carpetas,
-            'pagina' => $pagina,
-        ]);
+
+        // Manejo de subida de imagen única
+        $fotoFile = $form['ruta_imagen_unica']->getData();
+        if ($fotoFile) {
+            $newFilename = uniqid() . '.' . $fotoFile->guessExtension();
+            try {
+                $fotoFile->move(
+                    $this->getParameter('app.page_images_directory'),
+                    $newFilename
+                );
+                $pagina->setRutaImagenUnica('/uploads/page_images/' . $newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('error', 'No se pudo subir la imagen.');
+            }
+        }
+        
+        foreach ($pagina->getCuadriculaItems() as $item) {
+            $imagenFile = $form->get('cuadriculaItems')[$item->getId()]['imagen']->getData();
+            if ($imagenFile) {
+                $newFilename = uniqid().'.'.$imagenFile->guessExtension();
+                $imagenFile->move(
+                    $this->getParameter('app.page_images_directory'),
+                    $newFilename
+                );
+                $item->setImagen('/uploads/page_images/'.$newFilename);
+            }
+        }
+
+        // Guardar la página en la base de datos
+        $this->entityManager->persist($pagina);
+        $this->entityManager->flush();
+
+        // Crear y asociar un menú automáticamente
+        $menu = new Menu();
+        $menu->setRuta($pagina->getRuta());
+        $menu->setNombre($pagina->getRuta());
+        $menu->setVisible(true);
+        $menu->setPosicion(0);
+
+        $pagina->setMenu($menu);
+
+        $this->entityManager->persist($menu);
+        $this->entityManager->flush();
+
+        // Asociar carpetas a la página si el contenido tipo lo requiere
+        if (in_array($pagina->getContenidoTipo(), ['galeria', 'carrusel', 'cuadriculaLink', 'cuadriculaDescarga'])) {
+            foreach ($carpetas as $carpeta) {
+                $carpeta->addPagina($pagina);
+                $this->entityManager->persist($carpeta);
+            }
+            $this->entityManager->flush();
+        }
+
+        // Mensaje de éxito y redirección
+        $this->addFlash('success', 'Página creada correctamente.');
+        return $this->redirectToRoute('pagina_index');
     }
+
+    // Renderizar el formulario
+    return $this->renderWithMenu('pagina/new.html.twig', [
+        'sitio' => $this->sitio,
+        'form' => $form->createView(),
+        'menues' => $this->menues,
+        'carpetas' => $carpetas,
+        'pagina' => $pagina,
+    ]);
+}
+
     
 
 

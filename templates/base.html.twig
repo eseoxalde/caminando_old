@@ -234,6 +234,8 @@ function toggleContentFields() {
     const carrusellFields = document.getElementById('carrusellFields');
     const textFields = document.getElementById('textFields');
     const galeriaFields = document.getElementById('galeriaFields');
+    const cuadriculaLinkFields = document.getElementById('cuadriculaLinkFields');
+    const cuadriculaDescargaFields = document.getElementById('cuadriculaDescargaFields');
     const conditionalFields = document.getElementById('conditionalFields');
     const carpetaLabel = document.querySelector('#carpetaLabel');
     const carpetaField = document.querySelector('select[name="pagina[carpeta]"]');
@@ -263,6 +265,12 @@ function toggleContentFields() {
     }
     if (carrusellFields) {
         carrusellFields.style.display = (contentType === 'carrusel') ? 'block' : 'none';
+    }
+    if (cuadriculaLinkFields) {
+        cuadriculaLinkFields.style.display = (contentType === 'cuadriculaLink') ? 'block' : 'none';
+    }
+    if (cuadriculaDescargaFields) {
+        cuadriculaDescargaFields.style.display = (contentType === 'cuadriculaDescarga') ? 'block' : 'none';
     }
 }
 

@@ -8,6 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Factory\UserFactory;
 use App\Factory\PaginaFactory;
 use App\Factory\SitioFactory;
+use App\Factory\ForoFactory;
 
 
 class AppFixtures extends Fixture

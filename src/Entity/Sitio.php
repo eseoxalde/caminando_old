@@ -42,17 +42,16 @@ class Sitio
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
+    
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $metaTitle = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $metaDescription = null;
 
-        // Título global para Open Graph
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $ogTitle = null;
     
-        // Descripción global para Open Graph
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $ogDescription = null;
     

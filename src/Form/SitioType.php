@@ -33,8 +33,9 @@ class SitioType extends AbstractType
                         'image/jpeg',
                         'image/png',
                         'image/gif',
+                        'image/jpg',
                     ],
-                    'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF)',
+                    'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF, JPG)',
                 ])
             ],
         ])
@@ -53,8 +54,9 @@ class SitioType extends AbstractType
                             'image/jpeg',
                             'image/png',
                             'image/gif',
+                            'image/jpg',
                         ],
-                        'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF)',
+                        'mimeTypesMessage' => 'Por favor, sube una imagen válida (JPEG, PNG, GIF, JPG)',
                     ])
                 ],
             ])
@@ -62,6 +64,15 @@ class SitioType extends AbstractType
                 'label' => 'Correo electrónico',
                 'required' => false,
                 'attr' => ['placeholder' => 'Introduce el correo electrónico']
+            ])
+            ->add('metaTitle', TextType::class, [
+                'label' => 'Meta título.',
+                'attr' => ['placeholder' => 'Introduce el nombre del sitio web']
+            ])
+            ->add('metaDescription', TextType::class, [
+                'label' => 'Meta descripcion',
+                'required' => false,
+                'attr' => ['placeholder' => 'Introduce una descripción para que aparezca enlas búsqeudas']
             ])
             ;
             

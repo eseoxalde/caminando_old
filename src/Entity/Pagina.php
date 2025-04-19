@@ -67,9 +67,14 @@ class Pagina
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $ogType = null;
 
+    #[ORM\OneToMany(targetEntity: CuadriculaItem::class, mappedBy: "pagina", cascade: ["persist", "remove"])]
+    private Collection $cuadriculaItems;
+
 
     public function __construct()
-    { }
+    {
+        $this->cuadriculaItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -236,7 +241,6 @@ class Pagina
         return $this;
     }
 
-    // Getter y Setter para ogDescription
     public function getOgDescription(): ?string
     {
         return $this->ogDescription;
@@ -248,7 +252,6 @@ class Pagina
         return $this;
     }
 
-    // Getter y Setter para ogImage
     public function getOgImage(): ?string
     {
         return $this->ogImage;
@@ -260,7 +263,6 @@ class Pagina
         return $this;
     }
 
-    // Getter y Setter para ogUrl
     public function getOgUrl(): ?string
     {
         return $this->ogUrl;
@@ -272,7 +274,6 @@ class Pagina
         return $this;
     }
 
-    // Getter y Setter para ogType
     public function getOgType(): ?string
     {
         return $this->ogType;
@@ -284,4 +285,29 @@ class Pagina
         return $this;
     }
 
+    public function getCuadriculaItems(): Collection
+    {
+        return $this->cuadriculaItems;
+    }
+
+    public function addCuadriculaItem(CuadriculaItem $cuadriculaItem): self
+    {
+        if (!$this->cuadriculaItems->contains($cuadriculaItem)) {
+            $this->cuadriculaItems[] = $cuadriculaItem;
+            $cuadriculaItem->setPagina($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCuadriculaItem(CuadriculaItem $cuadriculaItem): self
+    {
+        if ($this->cuadriculaItems->removeElement($cuadriculaItem)) {
+            if ($cuadriculaItem->getPagina() === $this) {
+                $cuadriculaItem->setPagina(null);
+            }
+        }
+
+        return $this;
+    }
 }

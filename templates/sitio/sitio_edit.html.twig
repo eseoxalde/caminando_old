@@ -31,6 +31,16 @@
                 {{ form_label(form.mail, null, {'label_attr': {'class': 'form-label'}}) }}
                 {{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
             </div>
+            <div class="mb-2"> 
+                {{ form_label(form.metaTitle, null, {'label_attr': {'class': 'form-label'}}) }}
+                <p><small>Título que aparece en la barra de titulo y es mostrado en los resultados de búsqueda</small></p>
+                {{ form_widget(form.metaTitle, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="mb-2"> 
+                {{ form_label(form.metaDescription, null, {'label_attr': {'class': 'form-label'}}) }}
+                <p><small>Descripción breve que puede aparecer en los fragmentos de búsqueda en Google.</small></p>
+                {{ form_widget(form.metaDescription, {'attr': {'class': 'form-control'}}) }}
+            </div>
             <button type="submit" class="btn btn-primary mt-3 mr-2">Guardar cambios</button>
             <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Cancelar</button>
         {{ form_end(form) }}

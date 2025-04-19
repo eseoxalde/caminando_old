@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -77,6 +78,8 @@ class PaginaType extends AbstractType
                     'Carrusel de imagenes' => 'carrusel',
                     'Texto, Links' => 'textoLink',
                     'Galería de imagenes' => 'galeria',
+                    'Cuadricula de links con imagenes'=>'cuadriculaLinks',
+                    'Cuadricula de links con botones'=>'cuadriculaDescargas'
                 ],
                 'expanded' => false, 
                 'multiple' => false,  
@@ -118,6 +121,12 @@ class PaginaType extends AbstractType
                 'label' => 'Texto',
                 'required' => false,
                 'attr' => ['class' => 'form-control tinymce']
+            ])
+            ->add('cuadriculaItems', CollectionType::class, [
+                'entry_type' => CuadriculaItemType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ]);
     }
 
