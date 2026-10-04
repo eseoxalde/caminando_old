@@ -1,6 +1,8 @@
 # Proyecto Symfony
 
-Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una estructura básica para la gestión de páginas y barra de navegación, y un formulario de contacto.
+> ⚠️ **Work in progress:** versión sin terminar, conservada como referencia.
+
+Aplicación web desarrollada con Symfony. Proporciona una estructura básica para la gestión de páginas y barra de navegación, y un formulario de contacto.
 
 ## Requisitos
 
@@ -9,7 +11,7 @@ Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una e
 - Symfony CLI
 - MySQL o cualquier otra base de datos compatible
 
-## Otras
+## Otras tecnologías
 
 - Bootstrap 4.0.0
 - TinyMCE 6.x
@@ -18,45 +20,50 @@ Este proyecto es una aplicación web desarrollada con Symfony. Proporciona una e
 
 ## Instalación
 
-1. Clona el repositorio:
+1. Cloná el repositorio:
 
-   ```bash
+```bash
    git clone https://github.com/eseoxalde/caminando_old.git
-   cd proyecto-symfony
+   cd caminando_old
+```
 
-   ```
+2. Instalá las dependencias:
 
-2. Instala las dependencias
+```bash
    composer install
+```
 
-3. Cofigura las variables de entorno
-   Copia el archivo .env a .env.local y ajusta los parámetros de conexión a la base de datos y otros parámetros necesarios.
+3. Configurá las variables de entorno: copiá `.env` a `.env.local` y ajustá la conexión a la base de datos y los demás parámetros necesarios.
 
-4. Crea la base de datos y ejecuta las migraciones
+4. Creá la base de datos y ejecutá las migraciones:
+
+```bash
    symfony console doctrine:database:create
    symfony console doctrine:migrations:migrate
+```
 
-5. Crear un usuario admin y los datos necesarios para comenzar a trabajar
+5. Creá un usuario admin y los datos iniciales:
+
+```bash
    php bin/console doctrine:fixtures:load
-   admin@admin.com - admin123
+```
 
-6. Inicia el servidor de desarrollo
+   Las credenciales del admin se detallan en [`Manual.md`](Manual.md).
+
+6. Iniciá el servidor de desarrollo:
+
+```bash
    symfony server:start
+```
 
 ## Uso
 
-    Visita http://localhost:8000 en tu navegador para ver la aplicación en funcionamiento.
+Visitá http://localhost:8000 para ver la aplicación en funcionamiento.
 
-    Administra los menús y páginas desde las rutas correspondientes.
+Los menús y las páginas se administran desde el panel de administración.
 
-## Contribución
+## Documentación
 
-    Si deseas contribuir, por favor, sigue estos pasos:
-    Haz un fork del proyecto.
+- [`Manual.md`](Manual.md)
+- [`Documento.md`](Documento.md)
 
-1. Crea una nueva rama (git checkout -b feature/nueva-caracteristica).
-2. Realiza tus cambios y haz commit (git commit -am 'Añadir nueva característica').
-3. Empuja la rama (git push origin feature/nueva-caracteristica).
-4. Abre un Pull Request.
-
-## Licencia
